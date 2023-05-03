@@ -4,6 +4,11 @@ const validator = require('validator');
 const crypto = require('crypto');
 
 const workshopSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'ادخل اسم الورشه '],
+    unique: true,
+  },
   fName: {
     type: String,
     required: [true, 'name is required'],
