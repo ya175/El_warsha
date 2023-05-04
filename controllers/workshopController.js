@@ -6,4 +6,4 @@ const authController = require('./authController');
 exports.signupWorkshop = authController.signUp(Workshop);
 
 exports.getAllWorkshops = factory.getAll(Workshop);
-exports.getWorkshop = factory.getOne(Workshop);
+exports.getWorkshopById = factory.getOne(Workshop);

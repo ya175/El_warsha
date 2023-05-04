@@ -5,6 +5,7 @@ const Customer = require('./../models/customerModel');
 const Workshop = require('./../models/workshopModel');
 const Mechanic = require('./../models/mechanicModel');
 const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 const Email = require('./../utils/email');
 const crypto = require('crypto');
 const { isDate } = require('util/types');
@@ -198,6 +199,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     (await Customer.findById(decoded.id)) ||
     (await Workshop.findById(decoded.id)) ||
     (await Mechanic.findById(decoded.id));
+
   if (!currentUser) {
     return next(
       new AppError('the user of this token does not longer exist', 401)
@@ -211,6 +213,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   req.user = currentUser;
+
   next();
 });
 // //
@@ -224,3 +227,20 @@ exports.protect = catchAsync(async (req, res, next) => {
 //     next();
 //   };
 // };
+exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
+  req.params.id = req.user.id;
+  Model = req.user.constructor;
+  console.log(Model);
+  let query = Model.findById(req.params.id);
+  if (popOptoins) query = query.populate(popOptoins);
+  const doc = await query;
+  if (!doc) {
+    return next(new AppError('no document found with that id', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: doc,
+    },
+  });
+});
