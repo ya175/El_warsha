@@ -8,6 +8,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const customerRouter = require('./routes/customerRoutes');
 const mechanicRouter = require('./routes/mechanicRoutes');
 const workshopRouter = require('./routes/workshopRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const userRouter = require('./routes/userRoutes');
 const app = express();
 app.use(express.json());
@@ -40,6 +41,7 @@ app.use('/api/v1/customers', customerRouter);
 app.use('/api/v1/mechanics', mechanicRouter);
 app.use('/api/v1/workshops', workshopRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.all('*', (req, res, next) => {
   next(new appError(`can not find ${req.originalUrl}`, 404));

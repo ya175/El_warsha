@@ -10,6 +10,4 @@ router.route('/:id').get(mechanicController.getOneMechanicById);
 
 router.use(authController.protect);
 
-// router.get('/me', authController.getMe, mechanicController.getOneMechanicById);
-
 module.exports = router;

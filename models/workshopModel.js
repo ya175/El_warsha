@@ -13,11 +13,22 @@ const workshopSchema = new mongoose.Schema({
     type: String,
     required: [true, 'name is required'],
   },
-
+  role: {
+    type: String,
+  },
   lName: {
     type: String,
     required: [true, 'name is required'],
   },
+  imagecover: {
+    type: String,
+  },
+  team: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Mechanic',
+    },
+  ],
   email: {
     type: String,
     required: [true, ' email is required'],
@@ -42,9 +53,6 @@ const workshopSchema = new mongoose.Schema({
       message: 'passwords are not the same',
     },
   },
-  image: {
-    type: String,
-  },
   passwordResetToken: String,
   passwordResetExpires: Date,
   passwordChangedAt: Date,
@@ -68,6 +76,10 @@ workshopSchema.pre('save', function (next) {
   next();
 });
 
+workshopSchema.pre('save', function (next) {
+  if (this.isNew) this.role = 'Workshop';
+  next();
+});
 workshopSchema.methods.correctMyPassword = async function (
   candidatePassword,
   userPassword

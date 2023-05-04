@@ -13,7 +13,20 @@ const mechanicSchema = new mongoose.Schema({
     type: String,
     required: [true, 'name is required'],
   },
-
+  role: {
+    type: String,
+  },
+  workshop: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Workshop',
+  },
+  Specialization: {
+    type: String,
+  },
+  alone: {
+    type: Boolean,
+    required: [true, 'Are you alone or work with workshop'],
+  },
   email: {
     type: String,
     required: [true, ' email is required'],
@@ -61,6 +74,11 @@ mechanicSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+mechanicSchema.pre('save', function (next) {
+  if (this.isNew) this.role = 'Mechanic';
   next();
 });
 
