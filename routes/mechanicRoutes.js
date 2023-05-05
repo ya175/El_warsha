@@ -1,7 +1,10 @@
 const express = require('express');
 const mechanicController = require('./../controllers/mechanicController');
 const authController = require('./../controllers/authController');
+const reviewRouter = require('./reviewRoutes');
 const router = express.Router();
+
+router.use('/:mechanicId/reviews', reviewRouter); //wheereever you see '/:tourId/reviews' use reviewRouter instead
 
 router.post('/signup', mechanicController.signupMechanic);
 

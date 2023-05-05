@@ -11,6 +11,7 @@
   "author": "Yassmine&&Sara",
   "license": "ISC",
   "dependencies": {
+    "-": "^0.0.1",
     "bcrypt": "^5.1.0",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",

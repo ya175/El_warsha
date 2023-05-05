@@ -44,8 +44,11 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'reviewAbout',
-    select: 'name photo',
+    path: 'reviewTarget',
+    select: 'name',
+  }).populate({
+    path: 'customer',
+    select: 'fName image',
   });
   next();
 });

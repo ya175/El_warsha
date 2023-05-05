@@ -11,6 +11,7 @@ const Mechanic = require('./../models/mechanicModel');
 
 router.post('/forgotpassword', authController.forgotPassword);
 router.post('/login', authController.logIn);
+router.post('/signup', authController.signUp);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.use(authController.protect); //will protect all routes coming after it

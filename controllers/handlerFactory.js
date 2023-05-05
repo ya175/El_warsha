@@ -3,7 +3,11 @@ const AppError = require('./../utils/appError');
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.find();
+    let filter = {};
+    if (req.params.mechanicId) filter = { reviewTarget: req.params.mechanicId };
+    else if (req.params.workshopId)
+      filter = { reviewTarget: req.params.workshopId };
+    const doc = await Model.find(filter);
     res.status(200).json({
       status: 'success',
       results: doc.length,
@@ -41,6 +45,37 @@ exports.createOne = (Model) =>
       // results: tours.length,
       data: {
         data: doc,
+      },
+    });
+  });
+
+exports.deleteOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndDelete(req.params.id);
+    if (!doc) {
+      return next(new AppError(`no document found with that id`, 404));
+    }
+
+    res.status(204).json({
+      status: 'success',
+      message: 'Tour has been deleted',
+      data: null,
+    });
+  });
+
+exports.updateOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, //true to return the updated doc rather than the old one
+      runValidators: true,
+    });
+    if (!doc) {
+      return next(new AppError('no document found with that id', 404));
+    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        doc,
       },
     });
   });

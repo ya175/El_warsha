@@ -1,7 +1,10 @@
 const express = require('express');
 const workshopController = require('./../controllers/workshopController');
 const authController = require('./../controllers/authController');
+const reviewRouter = require('./reviewRoutes');
 const router = express.Router();
+
+router.use('/:workshopId/reviews', reviewRouter); //wheereever you see '/:tourId/reviews' use reviewRouter instead
 
 router.post('/signup', workshopController.signupWorkshop);
 router.route('/').get(workshopController.getAllWorkshops);

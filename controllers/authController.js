@@ -9,6 +9,8 @@ const factory = require('./handlerFactory');
 const Email = require('./../utils/email');
 const crypto = require('crypto');
 const { isDate } = require('util/types');
+const Review = require('../models/reviewModel');
+// const { Model } = require('mongoose');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -38,6 +40,7 @@ const createSendToken = (user, statusCode, res) => {
 
 module.exports.signUp = (Model) =>
   catchAsync(async (req, res, next) => {
+    // console.log(req.body);
     const newUser = await Model.create({
       fName: req.body.fName,
       lName: req.body.lName,
@@ -54,6 +57,68 @@ module.exports.signUp = (Model) =>
     createSendToken(newUser, 201, res);
   });
 
+// module.exports.signUp = catchAsync(async (req, res, next) => {
+//   console.log(req.body);
+//   let role = req.body.role;
+//   // console.log(req.body.role);
+//   let Model;
+//   switch (role) {
+//     case 'workshop':
+//       Model = Workshop;
+//       break;
+//     case 'customer':
+//       Model = Customer;
+//       break;
+//     case 'mechanic':
+//       Model = Mechanic;
+//       break;
+//   }
+//   const newUser = await Model.reate({
+//     fName: req.body.fName,
+//     lName: req.body.lName,
+//     email: req.body.email,
+//     password: req.body.password,
+//     passwordConfirm: req.body.passwordConfirm,
+//     name: req.body.name,
+//     image: req.body.image,
+//     role: req.body.role,
+//   });
+//   const url = `${req.protocol}://${req.get('host')}/me`;
+//   await new Email(newUser, url).sendWelcome();
+//   createSendToken(newUser, 201, res);
+// });
+
+// exports.signUp = catchAsync(async (req, res, next) => {
+//   // const { fName, lName, email, password, passwordConfirm, image } = req.body;
+
+//   // let role = req.body.role;
+//   // console.log(req.body.role);
+//   let Model;
+//   switch (req) {
+//     case 'workshop':
+//       Model = Workshop;
+//       break;
+//     case 'customer':
+//       Model = Customer;
+//       break;
+//     case 'mechanic':
+//       Model = Mechanic;
+//       break;
+//   }
+//   const newUser = await Model.create({
+//     fName: req.body.fName,
+//     lName: req.body.lName,
+//     email: req.body.email,
+//     password: req.body.password,
+//     passwordConfirm: req.body.passwordConfirm,
+//     name: req.body.name,
+//     image: req.body.image,
+//     role: req.body.role,
+//   });
+//   const url = `${req.protocol}://${req.get('host')}/me`;
+//   await new Email(newUser, url).sendWelcome();
+//   createSendToken(newUser, 201, res);
+// });
 exports.logIn = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -221,12 +286,35 @@ exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
-        new AppError('you donot have permission to do this action', 403)
+        new AppError('you do not have permission to do this action', 403)
       );
     }
     next();
   };
 };
+exports.restrictToItsCreator = catchAsync(async (req, res, next) => {
+  const reviewId = req.params.id;
+  const review = await Review.findById(reviewId);
+  console.log(reviewId);
+
+  // if (!review) {
+  //   return next(new AppError('Review not found'));
+  // }
+
+  // console.log(review);
+  // console.log(review.customer._id == req.user.id);
+  // console.log(review.customer._id);
+  // console.log(req.user.id);
+
+  if (!(req.user.id == review.customer._id)) {
+    // console.log('you are not allowed,you didnot createdthis review');
+    return next(
+      new AppError('you do not have permission to do this action', 403)
+    );
+  }
+  next();
+});
+
 exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
   req.params.id = req.user.id;
   Model = req.user.constructor;
