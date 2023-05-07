@@ -38,7 +38,7 @@ mongoose
 
 // console.log(dbstr);
 console.log(app.get('env'));
-port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 //CREATE SERVER
 const server = app.listen(port, () => {
   console.log(`listening on port ${port}`);
