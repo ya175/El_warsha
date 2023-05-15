@@ -25,7 +25,6 @@ const mechanicSchema = new mongoose.Schema({
   },
   alone: {
     type: Boolean,
-    required: [true, 'Are you alone or work with workshop'],
   },
   email: {
     type: String,
@@ -51,9 +50,19 @@ const mechanicSchema = new mongoose.Schema({
       message: 'passwords are not the same',
     },
   },
+  description: {
+    type: String,
+  },
+  phoneNumber: {
+    type: String,
+  },
   image: {
     type: String,
   },
+  imagecover: {
+    type: String,
+  },
+
   passwordResetToken: String,
   passwordResetExpires: Date,
   passwordChangedAt: Date,

@@ -6,8 +6,6 @@ const router = express.Router();
 
 router.use('/:mechanicId/reviews', reviewRouter); //wheereever you see '/:tourId/reviews' use reviewRouter instead
 
-router.post('/signup', mechanicController.signupMechanic);
-
 router.route('/').get(mechanicController.getAllMechanics);
 router.route('/:id').get(mechanicController.getOneMechanicById);
 

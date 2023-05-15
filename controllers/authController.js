@@ -12,6 +12,16 @@ const { isDate } = require('util/types');
 const Review = require('../models/reviewModel');
 // const { Model } = require('mongoose');
 
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) {
+      newObj[el] = obj[el];
+    }
+  });
+  return newObj;
+};
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -37,88 +47,39 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+module.exports.signUp = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+  let role = req.body.role;
+  console.log(req.body.role);
 
-module.exports.signUp = (Model) =>
-  catchAsync(async (req, res, next) => {
-    // console.log(req.body);
-    const newUser = await Model.create({
-      fName: req.body.fName,
-      lName: req.body.lName,
-      email: req.body.email,
-      password: req.body.password,
-      passwordConfirm: req.body.passwordConfirm,
-      name: req.body.name,
-      image: req.body.image,
-    });
-
-    const url = `${req.protocol}://${req.get('host')}/me`;
-    await new Email(newUser, url).sendWelcome();
-
-    createSendToken(newUser, 201, res);
+  let Model;
+  switch (role) {
+    case 'workshop':
+      Model = Workshop;
+      break;
+    case 'customer':
+      Model = Customer;
+      break;
+    case 'mechanic':
+      Model = Mechanic;
+      break;
+  }
+  console.log(Model);
+  const newUser = await Model.create({
+    fName: req.body.fName,
+    lName: req.body.lName,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    name: req.body.name,
+    image: req.body.image,
+    role: req.body.role,
   });
+  const url = `${req.protocol}://${req.get('host')}/me`;
+  await new Email(newUser, url).sendWelcome();
+  createSendToken(newUser, 201, res);
+});
 
-// module.exports.signUp = catchAsync(async (req, res, next) => {
-//   console.log(req.body);
-//   let role = req.body.role;
-//   // console.log(req.body.role);
-//   let Model;
-//   switch (role) {
-//     case 'workshop':
-//       Model = Workshop;
-//       break;
-//     case 'customer':
-//       Model = Customer;
-//       break;
-//     case 'mechanic':
-//       Model = Mechanic;
-//       break;
-//   }
-//   const newUser = await Model.reate({
-//     fName: req.body.fName,
-//     lName: req.body.lName,
-//     email: req.body.email,
-//     password: req.body.password,
-//     passwordConfirm: req.body.passwordConfirm,
-//     name: req.body.name,
-//     image: req.body.image,
-//     role: req.body.role,
-//   });
-//   const url = `${req.protocol}://${req.get('host')}/me`;
-//   await new Email(newUser, url).sendWelcome();
-//   createSendToken(newUser, 201, res);
-// });
-
-// exports.signUp = catchAsync(async (req, res, next) => {
-//   // const { fName, lName, email, password, passwordConfirm, image } = req.body;
-
-//   // let role = req.body.role;
-//   // console.log(req.body.role);
-//   let Model;
-//   switch (req) {
-//     case 'workshop':
-//       Model = Workshop;
-//       break;
-//     case 'customer':
-//       Model = Customer;
-//       break;
-//     case 'mechanic':
-//       Model = Mechanic;
-//       break;
-//   }
-//   const newUser = await Model.create({
-//     fName: req.body.fName,
-//     lName: req.body.lName,
-//     email: req.body.email,
-//     password: req.body.password,
-//     passwordConfirm: req.body.passwordConfirm,
-//     name: req.body.name,
-//     image: req.body.image,
-//     role: req.body.role,
-//   });
-//   const url = `${req.protocol}://${req.get('host')}/me`;
-//   await new Email(newUser, url).sendWelcome();
-//   createSendToken(newUser, 201, res);
-// });
 exports.logIn = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -330,5 +291,33 @@ exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
     data: {
       data: doc,
     },
+  });
+});
+
+exports.updateMe = catchAsync(async (req, res, next) => {
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(new AppError('this route is not for updating password', 400)); // 400 bad request
+  }
+  req.params.id = req.user.id;
+  Model = req.user.constructor;
+  console.log(Model);
+  //)FilterOut unwanted Fields
+  const filteredBody = filterObj(
+    req.body,
+    'image',
+    'name',
+    'imageCover',
+    'description',
+    'phoneNumber',
+    'fName',
+    'lName'
+  );
+  const updatedUser = await Model.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
+  res.status(200).json({
+    status: 'success',
+    user: updatedUser,
   });
 });

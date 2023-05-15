@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.use('/:workshopId/reviews', reviewRouter); //wheereever you see '/:tourId/reviews' use reviewRouter instead
 
-router.post('/signup', workshopController.signupWorkshop);
 router.route('/').get(workshopController.getAllWorkshops);
 router.route('/:id').get(workshopController.getWorkshopById);
 

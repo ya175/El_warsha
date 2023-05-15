@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const workshopSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'ادخل اسم الورشه '],
+    // required: [true, 'ادخل اسم الورشه '],
     unique: true,
   },
   fName: {
@@ -16,9 +16,15 @@ const workshopSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  description: {
+    type: String,
+  },
   lName: {
     type: String,
     required: [true, 'name is required'],
+  },
+  image: {
+    type: String,
   },
   imagecover: {
     type: String,
@@ -29,6 +35,9 @@ const workshopSchema = new mongoose.Schema({
       ref: 'Mechanic',
     },
   ],
+  phoneNumber: {
+    type: String,
+  },
   email: {
     type: String,
     required: [true, ' email is required'],
