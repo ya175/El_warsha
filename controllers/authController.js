@@ -51,7 +51,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
   console.log(req.body);
   let role = req.body.role;
   console.log(req.body.role);
-
+  console.log('this signup');
   let Model;
   switch (role) {
     case 'workshop':
