@@ -7,7 +7,6 @@ const workshopSchema = new mongoose.Schema({
   name: {
     type: String,
     // required: [true, 'ادخل اسم الورشه '],
-    unique: true,
   },
   fName: {
     type: String,
