@@ -9,7 +9,7 @@ process.on('uncaughtException', (err) => {
   console.log(err);
   process.exit(1);
 });
-
+//comment
 const app = require('./app');
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
