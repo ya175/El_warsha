@@ -276,6 +276,7 @@ exports.restrictToItsCreator = catchAsync(async (req, res, next) => {
 });
 
 exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
+  popOptoins = { path: 'cars' };
   req.params.id = req.user.id;
   Model = req.user.constructor;
   console.log(Model);

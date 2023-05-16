@@ -5,4 +5,4 @@ const authController = require('./authController');
 const Review = require('../models/reviewModel');
 
 exports.getAllWorkshops = factory.getAll(Workshop);
-exports.getWorkshopById = factory.getOne(Workshop, { path: 'review' });
+exports.getWorkshopById = factory.getOne(Workshop, { path: 'reviews' });

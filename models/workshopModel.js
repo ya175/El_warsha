@@ -3,67 +3,79 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const crypto = require('crypto');
 
-const workshopSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    // required: [true, 'ادخل اسم الورشه '],
-  },
-  fName: {
-    type: String,
-    required: [true, 'name is required'],
-  },
-  role: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-  lName: {
-    type: String,
-    required: [true, 'name is required'],
-  },
-  image: {
-    type: String,
-  },
-  imagecover: {
-    type: String,
-  },
-  team: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Mechanic',
+const workshopSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      // required: [true, 'ادخل اسم الورشه '],
     },
-  ],
-  phoneNumber: {
-    type: String,
-  },
-  email: {
-    type: String,
-    required: [true, ' email is required'],
-    lowercase: true,
-    unique: true,
-    validate: [validator.isEmail, 'please enter a valid email'],
-  },
-  password: {
-    type: String,
-    minlength: 8,
-    required: [true, 'Please enter a valid password'],
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    requird: [true, 'Please enter a valid password'],
-    validate: {
-      //work only when SAVE,CREATE
-      validator: async function (el) {
-        return el === this.password;
+    fName: {
+      type: String,
+      required: [true, 'name is required'],
+    },
+    role: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    lName: {
+      type: String,
+      required: [true, 'name is required'],
+    },
+    image: {
+      type: String,
+    },
+    imagecover: {
+      type: String,
+    },
+    team: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Mechanic',
       },
-      message: 'passwords are not the same',
+    ],
+    phoneNumber: {
+      type: String,
     },
+    email: {
+      type: String,
+      required: [true, ' email is required'],
+      lowercase: true,
+      unique: true,
+      validate: [validator.isEmail, 'please enter a valid email'],
+    },
+    password: {
+      type: String,
+      minlength: 8,
+      required: [true, 'Please enter a valid password'],
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      requird: [true, 'Please enter a valid password'],
+      validate: {
+        //work only when SAVE,CREATE
+        validator: async function (el) {
+          return el === this.password;
+        },
+        message: 'passwords are not the same',
+      },
+    },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    passwordChangedAt: Date,
   },
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  passwordChangedAt: Date,
+  {
+    //this make sure that where ever you has property that is not saved (claculated) it will be selected when ever yououtput them
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+workshopSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'reviewTarget',
+  localField: '_id',
 });
 workshopSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
