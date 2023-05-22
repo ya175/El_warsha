@@ -15,7 +15,7 @@ const reviewRouter = require('./routes/reviewRoutes');
 const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 const app = express();
-app.use(express.json());
+// app.use(express.json());
 app.use(cors());
 
 if (process.env.NODE_ENV === 'development') {
