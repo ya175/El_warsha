@@ -14,7 +14,7 @@ const mechanicSchema = new mongoose.Schema(
       type: String,
       required: [true, 'name is required'],
     },
-    role: {
+    rolle: {
       type: String,
     },
     workshop: {
@@ -100,7 +100,7 @@ mechanicSchema.pre('save', function (next) {
 });
 
 mechanicSchema.pre('save', function (next) {
-  if (this.isNew) this.role = 'Mechanic';
+  if (this.isNew) this.rolle = 'Mechanic';
   next();
 });
 

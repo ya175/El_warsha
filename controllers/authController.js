@@ -71,11 +71,11 @@ const createSendToken = (user, statusCode, res) => {
 };
 module.exports.signUp = catchAsync(async (req, res, next) => {
   console.log(req.body);
-  let role = req.body.role;
-  console.log(req.body.role);
+  let rolle = req.body.rolle;
+  console.log(req.body.rolle);
   console.log('this signup');
   let Model;
-  switch (role) {
+  switch (rolle) {
     case 'workshop':
       Model = Workshop;
       break;
@@ -94,7 +94,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     image: req.body.image,
-    role: req.body.role,
+    rolle: req.body.rolle,
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
@@ -264,9 +264,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.restrictTo = (...roles) => {
+exports.restrictTo = (...rolles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!rolles.includes(req.user.rolle)) {
       return next(
         new AppError('you do not have permission to do this action', 403)
       );

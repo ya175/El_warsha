@@ -14,7 +14,7 @@ const customerSchema = new mongoose.Schema(
       type: String,
       required: [true, 'name is required'],
     },
-    role: {
+    rolle: {
       type: String,
     },
     email: {
@@ -82,7 +82,7 @@ customerSchema.pre('save', function (next) {
 });
 
 customerSchema.pre('save', function (next) {
-  if (this.isNew) this.role = 'Customer';
+  if (this.isNew) this.rolle = 'Customer';
   next();
 });
 customerSchema.methods.correctMyPassword = async function (

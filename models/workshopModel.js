@@ -13,7 +13,7 @@ const workshopSchema = new mongoose.Schema(
       type: String,
       required: [true, 'name is required'],
     },
-    role: {
+    rolle: {
       type: String,
     },
     description: {
@@ -98,7 +98,7 @@ workshopSchema.pre('save', function (next) {
 });
 
 workshopSchema.pre('save', function (next) {
-  if (this.isNew) this.role = 'Workshop';
+  if (this.isNew) this.rolle = 'Workshop';
   next();
 });
 workshopSchema.methods.correctMyPassword = async function (
