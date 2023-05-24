@@ -59,6 +59,7 @@ const mechanicSchema = new mongoose.Schema(
     },
     image: {
       type: String,
+      default: 'default.jpg',
     },
     imagecover: {
       type: String,
