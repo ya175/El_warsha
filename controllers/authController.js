@@ -97,7 +97,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     rolle: req.body.rolle,
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
-  // await new Email(newUser, url).sendWelcome();
+  await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
 });
 
@@ -328,7 +328,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     req.body,
     'image',
     'name',
-    'imageCover',
+    // 'imageCover',
     'description',
     'phoneNumber',
     'fName',
