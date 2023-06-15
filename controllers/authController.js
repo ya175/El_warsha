@@ -73,7 +73,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
   console.log(req.body);
   let rolle = req.body.rolle;
   console.log(req.body.rolle);
-  console.log('this signup');
+
   let Model;
   switch (rolle) {
     case 'workshop':
@@ -87,15 +87,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       break;
   }
   console.log(Model);
-  const newUser = await Model.create({
-    fName: req.body.fName,
-    lName: req.body.lName,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    image: req.body.image,
-    rolle: req.body.rolle,
-  });
+  const newUser = new Model(req.body);
+  await newUser.save();
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
