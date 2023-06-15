@@ -2,15 +2,19 @@ const multer = require('multer');
 const { promisify } = require('util');
 const catchAsync = require('./../utils/catchAsync');
 const jwt = require('jsonwebtoken');
+
 const Customer = require('./../models/customerModel');
 const Workshop = require('./../models/workshopModel');
 const Mechanic = require('./../models/mechanicModel');
+
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+
 const Email = require('./../utils/email');
 const crypto = require('crypto');
 const { isDate } = require('util/types');
 const Review = require('../models/reviewModel');
+
 // const { Model } = require('mongoose');
 
 const multerStorage = multer.diskStorage({
@@ -73,25 +77,55 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
   console.log(req.body);
   let rolle = req.body.rolle;
   console.log(req.body.rolle);
-
-  let Model;
+  // let Model;
   switch (rolle) {
-    case 'workshop':
-      Model = Workshop;
+    case 'workshop': {
+      const newUser = await Workshop.create({
+        fName: req.body.fName,
+        lName: req.body.lName,
+        email: req.body.email,
+        password: req.body.password,
+        passwordConfirm: req.body.passwordConfirm,
+        // image: req.body.image,
+        rolle: req.body.rolle,
+      });
+      createSendToken(newUser, 201, res);
+
       break;
-    case 'customer':
-      Model = Customer;
+    }
+    case 'customer': {
+      const newUser = await Customer.create({
+        fName: req.body.fName,
+        lName: req.body.lName,
+        email: req.body.email,
+        password: req.body.password,
+        passwordConfirm: req.body.passwordConfirm,
+        image: req.body.image,
+        rolle: req.body.rolle,
+      });
+      createSendToken(newUser, 201, res);
+
       break;
-    case 'mechanic':
-      Model = Mechanic;
+    }
+    case 'mechanic': {
+      const newUser = await Mechanic.create({
+        fName: req.body.fName,
+        lName: req.body.lName,
+        email: req.body.email,
+        password: req.body.password,
+        passwordConfirm: req.body.passwordConfirm,
+        image: req.body.image,
+        rolle: req.body.rolle,
+      });
+      createSendToken(newUser, 201, res);
       break;
+    }
   }
-  console.log(Model);
-  const newUser = new Model(req.body);
-  await newUser.save();
-  const url = `${req.protocol}://${req.get('host')}/me`;
-  await new Email(newUser, url).sendWelcome();
-  createSendToken(newUser, 201, res);
+
+  // console.log(Model);
+
+  // const url = `${req.protocol}://${req.get('host')}/me`;
+  // await new Email(newUser, url).sendWelcome();
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
