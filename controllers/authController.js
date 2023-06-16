@@ -90,8 +90,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         image: req.body.image,
         rolle: req.body.rolle,
       });
-      const url = `${req.protocol}://${req.get('host')}/me`;
-      new Email(newUser, url).sendWelcome();
+      // const url = `${req.protocol}://${req.get('host')}/me`;
+      // new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
@@ -106,8 +106,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         image: req.body.image,
         rolle: req.body.rolle,
       });
-      const url = `${req.protocol}://${req.get('host')}/me`;
-      new Email(newUser, url).sendWelcome();
+      // const url = `${req.protocol}://${req.get('host')}/me`;
+      // new Email(newUser, url).sendWelcome();
 
       createSendToken(newUser, 201, res);
       console.log('created');
@@ -123,8 +123,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         image: req.body.image,
         rolle: req.body.rolle,
       });
-      const url = `${req.protocol}://${req.get('host')}/me`;
-      new Email(newUser, url).sendWelcome();
+      // const url = `${req.protocol}://${req.get('host')}/me`;
+      // new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;

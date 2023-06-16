@@ -9,12 +9,8 @@ router.use(authController.restrictTo('Customer'));
 
 router.route('/').post(carController.setUserIds, carController.addMyCar);
 router
-  .route('/addAgentData')
-  .post(
-    carController.setUserIds,
-    carController.follwAgent,
-    carController.addAgentData
-  );
+  .route('/addAgentData/:id')
+  .post(carController.setUserIds, carController.addAgentData);
 
 router.route('/:id').patch(carController.setUserIds, carController.updateMyCar);
 module.exports = router;

@@ -41,7 +41,6 @@ exports.createOne = (Model) =>
     const doc = await Model.create(req.body);
     res.status(201).json({
       status: 'success',
-      results: tours.length,
       data: {
         data: doc,
       },
