@@ -86,9 +86,11 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
-        // image: req.body.image,
+        image: req.body.image,
         rolle: req.body.rolle,
       });
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      await new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
@@ -103,8 +105,11 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         image: req.body.image,
         rolle: req.body.rolle,
       });
-      createSendToken(newUser, 201, res);
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      await new Email(newUser, url).sendWelcome();
 
+      createSendToken(newUser, 201, res);
+      console.log('created');
       break;
     }
     case 'mechanic': {
@@ -117,15 +122,15 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         image: req.body.image,
         rolle: req.body.rolle,
       });
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      await new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
+
       break;
     }
   }
 
   // console.log(Model);
-
-  // const url = `${req.protocol}://${req.get('host')}/me`;
-  // await new Email(newUser, url).sendWelcome();
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
