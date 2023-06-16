@@ -27,7 +27,7 @@ const carSchema = new mongoose.Schema({
   },
   followAgency: {
     type: Boolean,
-    required: [true, 'agency is required'],
+    // required: [true, 'agency is required'],
   },
   agencyName: String,
   agencyAddress: String,

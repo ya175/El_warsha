@@ -73,10 +73,11 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
 module.exports.signUp = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   let rolle = req.body.rolle;
-  console.log(req.body.rolle);
+  // console.log(req.body.rolle);
   // let Model;
   switch (rolle) {
     case 'workshop': {
@@ -90,7 +91,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         rolle: req.body.rolle,
       });
       const url = `${req.protocol}://${req.get('host')}/me`;
-      await new Email(newUser, url).sendWelcome();
+      new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
@@ -106,7 +107,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         rolle: req.body.rolle,
       });
       const url = `${req.protocol}://${req.get('host')}/me`;
-      await new Email(newUser, url).sendWelcome();
+      new Email(newUser, url).sendWelcome();
 
       createSendToken(newUser, 201, res);
       console.log('created');
@@ -123,7 +124,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
         rolle: req.body.rolle,
       });
       const url = `${req.protocol}://${req.get('host')}/me`;
-      await new Email(newUser, url).sendWelcome();
+      new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
