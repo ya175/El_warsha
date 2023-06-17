@@ -77,19 +77,18 @@ const createSendToken = (user, statusCode, res) => {
 module.exports.signUp = catchAsync(async (req, res, next) => {
   // console.log(req.body);
   let rolle = req.body.rolle;
-  // console.log(req.body.rolle);
-  // let Model;
+  userData = {
+    fName: req.body.fName,
+    lName: req.body.lName,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    rolle: req.body.rolle,
+  };
+  console.log(userData);
   switch (rolle) {
     case 'workshop': {
-      const newUser = await Workshop.create({
-        fName: req.body.fName,
-        lName: req.body.lName,
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
-        image: req.body.image,
-        rolle: req.body.rolle,
-      });
+      const newUser = await Workshop.create(userData);
       // const url = `${req.protocol}://${req.get('host')}/me`;
       // new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
@@ -97,36 +96,18 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       break;
     }
     case 'customer': {
-      const newUser = await Customer.create({
-        fName: req.body.fName,
-        lName: req.body.lName,
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
-        image: req.body.image,
-        rolle: req.body.rolle,
-      });
+      const newUser = await Customer.create(userData);
       // const url = `${req.protocol}://${req.get('host')}/me`;
       // new Email(newUser, url).sendWelcome();
-
       createSendToken(newUser, 201, res);
       console.log('created');
       break;
     }
     case 'mechanic': {
-      const newUser = await Mechanic.create({
-        fName: req.body.fName,
-        lName: req.body.lName,
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
-        image: req.body.image,
-        rolle: req.body.rolle,
-      });
+      const newUser = await Mechanic.create(userData);
       // const url = `${req.protocol}://${req.get('host')}/me`;
       // new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
-
       break;
     }
   }
@@ -307,6 +288,7 @@ exports.restrictTo = (...rolles) => {
     next();
   };
 };
+
 exports.restrictToItsCreator = catchAsync(async (req, res, next) => {
   const reviewId = req.params.id;
   const review = await Review.findById(reviewId);
@@ -332,6 +314,7 @@ exports.restrictToItsCreator = catchAsync(async (req, res, next) => {
 
 exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
   popOptoins = { path: 'cars' };
+  console.log(popOptoins);
   req.params.id = req.user.id;
   Model = req.user.constructor;
   console.log(Model);
@@ -359,6 +342,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   //)FilterOut unwanted Fields
   const filteredBody = filterObj(
     req.body,
+    //allowedFilelds
     'image',
     'name',
     // 'imageCover',
@@ -367,6 +351,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'fName',
     'lName'
   );
+
   if (req.file) filteredBody.image = req.file.filename;
   console.log(req.file);
   const updatedUser = await Model.findByIdAndUpdate(req.user.id, filteredBody, {
