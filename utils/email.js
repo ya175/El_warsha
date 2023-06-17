@@ -16,7 +16,7 @@ module.exports = class Email {
     if (process.env.NODE_ENV === 'production') {
       //Gmail production
       return nodemailer.createTransport({
-        service: 'Gmail',
+        service: 'gmail',
         auth: {
           user: process.env.GMAIL_EMAIL_USERNAME,
           pass: process.env.GMAIL_EMAIL_PASSWORD,
@@ -60,7 +60,7 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'hwllo  from send wecome');
+    await this.send('welcome', 'hello  from El_Warsha');
   }
 
   async sendPasswordReset() {
