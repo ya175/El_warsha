@@ -89,29 +89,30 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
   switch (rolle) {
     case 'workshop': {
       const newUser = await Workshop.create(userData);
-      // const url = `${req.protocol}://${req.get('host')}/me`;
-      // new Email(newUser, url).sendWelcome();
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
     }
     case 'customer': {
       const newUser = await Customer.create(userData);
-      // const url = `${req.protocol}://${req.get('host')}/me`;
-      // new Email(newUser, url).sendWelcome();
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
       console.log('created');
       break;
     }
     case 'mechanic': {
       const newUser = await Mechanic.create(userData);
-      // const url = `${req.protocol}://${req.get('host')}/me`;
-      // new Email(newUser, url).sendWelcome();
+
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      new Email(newUser, url).sendWelcome();
+
       createSendToken(newUser, 201, res);
       break;
     }
   }
-
   // console.log(Model);
 });
 

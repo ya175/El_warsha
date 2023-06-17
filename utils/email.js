@@ -9,22 +9,22 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.fName;
     this.url = url;
-    this.from = `Jonas Schemdtmann <${process.env.EMAIL_FROM}>`;
+    this.from = `El_Warsha<${process.env.EMAIL_FROM}>`;
   }
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      //Gmail
+      //Gmail production
       return nodemailer.createTransport({
         service: 'Gmail',
-        secure: false,
+        secure: true,
         auth: {
           user: process.env.GMAIL_EMAIL_USERNAME,
           pass: process.env.GMAIL_EMAIL_PASSWORD,
         },
       });
     }
-    //MAILTRAP
+    //MAILTRAP development
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
