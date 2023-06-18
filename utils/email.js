@@ -15,11 +15,18 @@ module.exports = class Email {
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       //Gmail production
+      // return nodemailer.createTransport({
+      //   service: 'gmail',
+      //   auth: {
+      //     user: process.env.GMAIL_EMAIL_USERNAME,
+      //     pass: process.env.GMAIL_EMAIL_PASSWORD,
+      //   },
+      // });
       return nodemailer.createTransport({
-        service: 'gmail',
+        service: 'hotmail',
         auth: {
-          user: process.env.GMAIL_EMAIL_USERNAME,
-          pass: process.env.GMAIL_EMAIL_PASSWORD,
+          user: process.env.OUTLOOK_EMAIL_USERNAME,
+          pass: process.env.OUTLOOK_EMAIL_PASSWORD,
         },
       });
     }
@@ -47,7 +54,8 @@ module.exports = class Email {
 
     //2)define email options
     const mailOptions = {
-      from: this.from,
+      // from: this.from,
+      from: process.env.OUTLOOK_EMAIL_USERNAME,
       to: this.to,
       subject,
       html,

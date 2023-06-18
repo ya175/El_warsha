@@ -90,7 +90,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     case 'workshop': {
       const newUser = await Workshop.create(userData);
       const url = `${req.protocol}://${req.get('host')}/me`;
-      new Email(newUser, url).sendWelcome();
+      await new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
@@ -98,7 +98,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     case 'customer': {
       const newUser = await Customer.create(userData);
       const url = `${req.protocol}://${req.get('host')}/me`;
-      new Email(newUser, url).sendWelcome();
+      await new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
       console.log('created');
       break;
@@ -107,7 +107,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const newUser = await Mechanic.create(userData);
 
       const url = `${req.protocol}://${req.get('host')}/me`;
-      new Email(newUser, url).sendWelcome();
+      await new Email(newUser, url).sendWelcome();
 
       createSendToken(newUser, 201, res);
       break;
