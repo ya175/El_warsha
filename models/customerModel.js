@@ -56,6 +56,7 @@ const customerSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
 customerSchema.virtual('cars', {
   ref: 'Car',
   foreignField: 'customer',

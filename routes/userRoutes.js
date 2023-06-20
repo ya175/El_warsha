@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const customerController = require('./../controllers/customerController');
 const authController = require('./../controllers/authController');
-
+const imagesCloud = require('./../utils/imagesCloud');
 const factory = require('./../controllers/handlerFactory');
 
 const Workshop = require('./../models/workshopModel');
@@ -22,7 +22,12 @@ const Mechanic = require('./../models/mechanicModel');
 // };
 router.post('/forgotpassword', authController.forgotPassword);
 router.post('/login', authController.logIn);
-router.post('/signup', authController.signUp);
+router.post(
+  '/signup',
+  imagesCloud.uploadeProfileImage,
+  // images.uploadeProfileImage,
+  authController.signUp
+);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.use(authController.protect); //will protect all routes coming after it
@@ -32,8 +37,9 @@ router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', authController.getMe);
 router.patch(
   '/updateMe',
-  authController.uploadUserImage,
+  // authController.uploadUserImage,
   authController.updateMe
 );
 
+// router.post('/uploadImage', images.uploadeProfileImage);
 module.exports = router;

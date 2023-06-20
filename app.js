@@ -5,6 +5,8 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const cookieParser = require('cookie-parser');
+const fileupload = require('express-fileupload');
 
 const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -14,8 +16,10 @@ const workshopRouter = require('./routes/workshopRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
+
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 
 if (process.env.NODE_ENV === 'development') {
@@ -23,10 +27,13 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.headers);
+  // console.log(req.headers);
+  // console.log(req.cookies);
   next();
 });
 //limit requests from same api
+app.use(fileupload({ useTempFiles: true }));
+
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,

@@ -2,7 +2,7 @@ const multer = require('multer');
 const { promisify } = require('util');
 const catchAsync = require('./../utils/catchAsync');
 const jwt = require('jsonwebtoken');
-
+const cloudinary = require('./../utils/imagesCloud');
 const Customer = require('./../models/customerModel');
 const Workshop = require('./../models/workshopModel');
 const Mechanic = require('./../models/mechanicModel');
@@ -16,27 +16,6 @@ const { isDate } = require('util/types');
 const Review = require('../models/reviewModel');
 
 // const { Model } = require('mongoose');
-
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/users');
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  },
-});
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new AppError('not an image ,please choose an image', 400), false);
-  }
-};
-const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
-
-exports.uploadUserImage = upload.single('image');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -84,6 +63,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     rolle: req.body.rolle,
+    image: req.body.image,
   };
   console.log(userData);
   switch (rolle) {
@@ -247,6 +227,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   if (!token) {
     return next(
