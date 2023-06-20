@@ -46,6 +46,7 @@ const customerSchema = new mongoose.Schema(
       type: String,
       // default: 'default.jpg',
     },
+
     passwordResetToken: String,
     passwordResetExpires: Date,
     passwordChangedAt: Date,

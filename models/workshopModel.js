@@ -27,7 +27,7 @@ const workshopSchema = new mongoose.Schema(
       type: String,
       // default: 'default.jpg',
     },
-    imagecover: {
+    imageCover: {
       type: String,
     },
     team: [

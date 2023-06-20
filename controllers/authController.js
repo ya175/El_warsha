@@ -52,7 +52,6 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
-
 module.exports.signUp = catchAsync(async (req, res, next) => {
   // console.log(req.body);
   let rolle = req.body.rolle;
@@ -93,7 +92,6 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       break;
     }
   }
-  // console.log(Model);
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
@@ -319,6 +317,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('this route is not for updating password', 400)); // 400 bad request
   }
+
+  // console.log(req.files);
   req.params.id = req.user.id;
   Model = req.user.constructor;
   console.log(Model);
@@ -328,15 +328,16 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     //allowedFilelds
     'image',
     'name',
-    // 'imageCover',
+    'imageCover',
     'description',
     'phoneNumber',
     'fName',
     'lName'
   );
 
-  if (req.file) filteredBody.image = req.file.filename;
-  console.log(req.file);
+  filteredBody.image = req.body.image;
+  filteredBody.imageCover = req.body.imageCover;
+  console.log(filteredBody);
   const updatedUser = await Model.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,

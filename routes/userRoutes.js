@@ -37,9 +37,11 @@ router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', authController.getMe);
 router.patch(
   '/updateMe',
-  // authController.uploadUserImage,
+  imagesCloud.uploadeImageCover,
+  imagesCloud.uploadeProfileImage,
   authController.updateMe
 );
 
 // router.post('/uploadImage', images.uploadeProfileImage);
+router.post('/uploadImages', imagesCloud.uploadeImageCover);
 module.exports = router;
