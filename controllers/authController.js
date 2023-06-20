@@ -294,13 +294,18 @@ exports.restrictToItsCreator = catchAsync(async (req, res, next) => {
 });
 
 exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
-  popOptoins = { path: 'cars' };
-  console.log(popOptoins);
   req.params.id = req.user.id;
   Model = req.user.constructor;
+
   console.log(Model);
   let query = Model.findById(req.params.id);
-  if (popOptoins) query = query.populate(popOptoins);
+  console.log(req.user.rolle);
+  if (req.user.rolle == 'Customer') {
+    console.log(true);
+    popOptoins = { path: 'cars' };
+    console.log(popOptoins);
+    if (popOptoins) query = query.populate(popOptoins);
+  }
   const doc = await query;
   if (!doc) {
     return next(new AppError('no document found with that id', 404));
