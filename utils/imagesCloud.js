@@ -8,9 +8,11 @@ cloudinary.config({
 
 exports.uploadeProfileImage = async (req, res, next) => {
   // console.log(req.files,im);
-  if (!req.files.image) {
+  if (!req.files) {
     console.log('no images');
+    req.body.image = undefined;
     return next();
+    console.log('noimages');
   }
   console.log(req.files.image);
   const ext = req.files.image.mimetype.split('/')[1];
@@ -28,8 +30,9 @@ exports.uploadeProfileImage = async (req, res, next) => {
   next();
 };
 exports.uploadeImageCover = async (req, res, next) => {
-  if (!req.files.imageCover) {
-    res.status(200).json({ status: 'no image Cover' });
+  if (!req.files) {
+    // res.status(200).json({ status: 'no image Cover' });
+    console.log('no image cover');
     return next();
   }
   console.log(req.files.imageCover);
