@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-
+const nodeoutlook = require('nodejs-nodemailer-outlook');
 const pug = require('pug');
 
 const htmlToText = require('html-to-text');
@@ -22,14 +22,43 @@ module.exports = class Email {
       //     pass: process.env.GMAIL_EMAIL_PASSWORD,
       //   },
       // });
+      //       Server name: smtp.office365.com
+      // Port: 587
+      //
+
       return nodemailer.createTransport({
+        // nodeoutlook.createTransport({
+        host: 'smtp.office365.com',
         service: 'hotmail',
+        port: 587,
+        secure: false,
+        // Encryption method: STARTTLS
+        // secureConnection: false,
+        // tls: {
+        //   ciphers: 'SSLv3',
+        //   rejectUnauthorized: true,
+        // },
+        // tls: { ciphers: 'SSLv3' },
+        // service: 'hotmail',
         auth: {
           user: process.env.OUTLOOK_EMAIL_USERNAME,
           pass: process.env.OUTLOOK_EMAIL_PASSWORD,
         },
+        tls: {
+          rejectUnauthorized: false,
+          minVersion: 'TLSv1.2',
+        },
       });
     }
+    //   return nodemailer.createTransport({
+
+    //     service: 'hotmail',
+    //     auth: {
+    //       user: process.env.OUTLOOK_EMAIL_USERNAME,
+    //       pass: process.env.OUTLOOK_EMAIL_PASSWORD,
+    //     },
+    //   });
+    // }
     //MAILTRAP development
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,

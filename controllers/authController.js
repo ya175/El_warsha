@@ -32,6 +32,7 @@ const signToken = (id) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
+
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
@@ -40,9 +41,13 @@ const createSendToken = (user, statusCode, res) => {
     ),
     // secure:true,
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   };
+
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
   res.cookie('jwt', token, cookieOptions);
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
@@ -69,7 +74,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     case 'workshop': {
       const newUser = await Workshop.create(userData);
       const url = `${req.protocol}://${req.get('host')}/me`;
-      await new Email(newUser, url).sendWelcome();
+      new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
 
       break;
@@ -77,7 +82,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
     case 'customer': {
       const newUser = await Customer.create(userData);
       const url = `${req.protocol}://${req.get('host')}/me`;
-      await new Email(newUser, url).sendWelcome();
+      new Email(newUser, url).sendWelcome();
       createSendToken(newUser, 201, res);
       console.log('created');
       break;
@@ -86,7 +91,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const newUser = await Mechanic.create(userData);
 
       const url = `${req.protocol}://${req.get('host')}/me`;
-      await new Email(newUser, url).sendWelcome();
+      new Email(newUser, url).sendWelcome();
 
       createSendToken(newUser, 201, res);
       break;

@@ -19,16 +19,16 @@ const carRouter = require('./routes/carRoutes');
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
 app.use(cors());
+app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
-  // console.log(req.cookies);
+  console.log(req.headers);
+  console.log(req.cookies);
   next();
 });
 //limit requests from same api

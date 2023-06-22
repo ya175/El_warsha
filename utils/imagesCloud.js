@@ -11,7 +11,6 @@ exports.uploadeProfileImage = async (req, res, next) => {
   // console.log(req.files,im);
   if (!req.files.image) {
     console.log('no images');
-
     return next();
   }
   const ext = req.files.image.mimetype.split('/')[1];
@@ -50,20 +49,3 @@ exports.uploadeImageCover = async (req, res, next) => {
   // res.status(200).json(result);
   next();
 };
-
-// app.use('uploadImages',upload.array('image'),async (req, res,next) => {
-//   console.log(req.files.image);
-//   // console.log(req.files,im);
-//   const ext = req.files.image.mimetype.split('/')[1];
-//   const imageName = `user--${Date.now()}.${ext}`;
-//   const uploader =async(path)=> await cloudinary.uploads(path,imagName)
-//     req.files.image.tempFilePath,
-//     {
-//       resource_type: 'auto',
-//       public_id: `${imageName}`,
-//     }
-//   );
-//   console.log(result);
-//   req.body.image = result.secure_url;
-//   next();
-// };
