@@ -18,8 +18,8 @@ const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'development') {
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   console.log(req.headers);
-  console.log(req.cookies);
+  // console.log(`req.cookies: ${req}`);
   next();
 });
 //limit requests from same api

@@ -58,7 +58,7 @@ const createSendToken = (user, req, statusCode, res) => {
   // console.log(req);
   // console.log(req[Symbol(kHeaders)]);
 
-  res.cookie('jwt', token, cookieOptions);
+  // res.cookie('jwt_', token, cookieOptions);
   if (res.cookie('jwt', token, cookieOptions))
     console.log('cookie set successfuly');
 
