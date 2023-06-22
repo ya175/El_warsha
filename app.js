@@ -19,19 +19,20 @@ const carRouter = require('./routes/carRoutes');
 
 const app = express();
 app.use(cors());
-app.options('*', cors());
+// app.options('*', cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.headers);
+  console.log(req);
   // console.log(`req.cookies: ${req}`);
   next();
 });
-//limit requests from same api
+
 app.use(fileupload({ useTempFiles: true }));
+//limit requests from same api
 
 const limiter = rateLimit({
   max: 100,
@@ -40,7 +41,6 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
-
 // app.use(express.json());
 app.use(cookieParser());
 

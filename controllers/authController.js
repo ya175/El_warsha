@@ -39,7 +39,7 @@ const createSendToken = (user, req, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    secure: true,
+    // secure: true,
     httpOnly: true,
     // secure:
     // req.secure ||
@@ -58,11 +58,11 @@ const createSendToken = (user, req, statusCode, res) => {
   // console.log(req);
   // console.log(req[Symbol(kHeaders)]);
 
-  // res.cookie('jwt_', token, cookieOptions);
-  if (res.cookie('jwt', token, cookieOptions))
-    console.log('cookie set successfuly');
+  res.cookie('jwt', token, cookieOptions);
+  // if (res.cookie('jwt', token, cookieOptions))
+  //   console.log('cookie set successfuly');
 
-  user.password = undefined;
+  // user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
