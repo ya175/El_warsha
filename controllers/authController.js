@@ -39,14 +39,24 @@ const createSendToken = (user, req, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    // secure:true,
+    secure: true,
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    // secure:
+    // req.secure ||
+    // req.headers([Symbol(kHeaders)])['x-forwarded-proto'] === 'https',
+
+    // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    //  request.headers[“X-Forwarded-For”].
   };
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  console.log(req);
-  console.log(`req.secure is ${req.secure}`);
+  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // if (process.env.NODE_ENV === 'production') {
+  //   // cookieOptions.secure =
+  //   //   req.secure || req.headers['x-forwarded-proto') === 'https';
+  //   cookieOptions.secure = true;
+  // }
+  // console.log(req);
+  // console.log(req[Symbol(kHeaders)]);
 
   res.cookie('jwt', token, cookieOptions);
   user.password = undefined;
