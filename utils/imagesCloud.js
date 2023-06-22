@@ -7,12 +7,12 @@ cloudinary.config({
 });
 
 exports.uploadeProfileImage = async (req, res, next) => {
-  console.log(req.files.image);
   // console.log(req.files,im);
   if (!req.files.image) {
     console.log('no images');
     return next();
   }
+  console.log(req.files.image);
   const ext = req.files.image.mimetype.split('/')[1];
   const imageName = `user--${Date.now()}.${ext}`;
   console.log(imageName);

@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(fileupload({ useTempFiles: true }));
+app.use(fileupload({ useTempFiles: true }));
 //limit requests from same api
 
 const limiter = rateLimit({
