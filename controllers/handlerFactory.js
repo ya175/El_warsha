@@ -35,9 +35,6 @@ exports.getOne = (Model, popOptoins) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    //first way
-    // const newTour=  new Tour({}));
-    // newTour.save();
     const doc = await Model.create(req.body);
     res.status(201).json({
       status: 'success',

@@ -19,8 +19,7 @@ const carRouter = require('./routes/carRoutes');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
-app.use(cookieParser());
+app.options('*', cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -41,6 +40,9 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
+
+// app.use(express.json());
+app.use(cookieParser());
 
 // {    "email":{"$gt":""},
 //     "password":"pass1234455"
