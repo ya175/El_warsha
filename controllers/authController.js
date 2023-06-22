@@ -33,7 +33,7 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, req, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
@@ -45,6 +45,8 @@ const createSendToken = (user, statusCode, res) => {
   };
 
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  console.log(req);
+  console.log(`req.secure is ${req.secure}`);
 
   res.cookie('jwt', token, cookieOptions);
   user.password = undefined;
@@ -75,7 +77,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const newUser = await Workshop.create(userData);
       const url = `${req.protocol}://${req.get('host')}/me`;
       new Email(newUser, url).sendWelcome();
-      createSendToken(newUser, 201, res);
+      createSendToken(newUser, req, 201, res);
 
       break;
     }
@@ -83,7 +85,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const newUser = await Customer.create(userData);
       const url = `${req.protocol}://${req.get('host')}/me`;
       new Email(newUser, url).sendWelcome();
-      createSendToken(newUser, 201, res);
+      createSendToken(newUser, req, 201, res);
       console.log('created');
       break;
     }
@@ -93,7 +95,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const url = `${req.protocol}://${req.get('host')}/me`;
       new Email(newUser, url).sendWelcome();
 
-      createSendToken(newUser, 201, res);
+      createSendToken(newUser, req, 201, res);
       break;
     }
   }
@@ -117,7 +119,7 @@ exports.logIn = catchAsync(async (req, res, next) => {
   }
   //console.log(user);
   //3) send token
-  createSendToken(user, 200, res);
+  createSendToken(user, req, 200, res);
 });
 
 module.exports.forgotPassword = catchAsync(async (req, res, next) => {
