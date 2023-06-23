@@ -437,6 +437,8 @@ exports.updateWorkshopProfile = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
+  console.log(`body:`);
+  console.log(req.body);
 
   res.status(200).json({
     status: 'success',

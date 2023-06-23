@@ -1,5 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 
+const catchAsync = require('./catchAsync');
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
@@ -36,13 +37,15 @@ exports.uploadeProfileImage = async (req, res, next) => {
 //update profile
 exports.updateProfileImage = async (req, res, next) => {
   // console.log(req.files,im);
-  // // console.log(req.files);
-  if (!req.files) {
+  console.log(`---------`);
+
+  if (!req.files.image) {
     console.log('no images');
     // console.log(req.files);
     // req.body.image = undefined;
+    console.log(req.user);
     return next();
-    // console.log('noimages');
+    console.log('noimages');
   }
   console.log(req.files.image);
   const ext = req.files.image.mimetype.split('/')[1];
@@ -55,13 +58,14 @@ exports.updateProfileImage = async (req, res, next) => {
       public_id: `${imageName}`,
     }
   );
-  console.log(result);
+  console.log(`image uploading result: 
+  ${result}`);
   req.body.image = result.secure_url;
   next();
 };
 
 exports.updateImageCover = async (req, res, next) => {
-  if (!req.files) {
+  if (!req.files.imageCover) {
     // res.status(200).json({ status: 'no image Cover' });
     console.log('no image cover');
     return next();
@@ -78,8 +82,13 @@ exports.updateImageCover = async (req, res, next) => {
       public_id: `${imageName}`,
     }
   );
-  console.log(result);
+
+  // console.log(result);
   req.body.imageCover = result.secure_url;
+  console.log(`image uploading result: 
+  ${result}`);
+  console.log(`result:`);
+  console.log(req.body.imageCover);
   // res.status(200).json(result);
   next();
 };
