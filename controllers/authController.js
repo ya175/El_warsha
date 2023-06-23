@@ -338,7 +338,7 @@ exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
   });
 });
 
-exports.updateMe = catchAsync(async (req, res, next) => {
+exports.updateCustomerProfile = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('this route is not for updating password', 400)); // 400 bad request
   }
@@ -348,25 +348,96 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   Model = req.user.constructor;
   console.log(Model);
   //)FilterOut unwanted Fields
-  const filteredBody = filterObj(
-    req.body,
-    //allowedFilelds
-    'image',
-    'name',
-    'imageCover',
-    'description',
-    'phoneNumber',
-    'fName',
-    'lName'
-  );
+  // const filteredBody = filterObj(
+  //   req.body,
+  //   //allowedFilelds
+  //   'image',
+  //   'name',
+  //   // 'imageCover',
+  //   'description',
+  //   'phoneNumber',
+  //   'fName',
+  //   'lName'
+  // );
 
-  filteredBody.image = req.body.image;
-  filteredBody.imageCover = req.body.imageCover;
-  console.log(filteredBody);
-  const updatedUser = await Model.findByIdAndUpdate(req.user.id, filteredBody, {
+  // filteredBody.image = req.body.image;
+  // filteredBody.imageCover = req.body.imageCover;
+  // console.log(filteredBody);
+  const updatedUser = await Model.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
   });
+  res.status(200).json({
+    status: 'success',
+    user: updatedUser,
+  });
+});
+
+exports.updateMechanicProfile = catchAsync(async (req, res, next) => {
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(new AppError('this route is not for updating password', 400)); // 400 bad request
+  }
+
+  // console.log(req.files);
+  req.params.id = req.user.id;
+  Model = req.user.constructor;
+  console.log(Model);
+  //)FilterOut unwanted Fields
+  // const filteredBody = filterObj(
+  //   req.body,
+  //   //allowedFilelds
+  //   'image',
+  //   'name',
+  //   // 'imageCover',
+  //   'description',
+  //   'phoneNumber',
+  //   'fName',
+  //   'lName'
+  // );
+
+  // filteredBody.image = req.body.image;
+  // filteredBody.imageCover = req.body.imageCover;
+  // console.log(filteredBody);
+  const updatedUser = await Model.findByIdAndUpdate(req.user.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  res.status(200).json({
+    status: 'success',
+    user: updatedUser,
+  });
+});
+exports.updateWorkshopProfile = catchAsync(async (req, res, next) => {
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(new AppError('this route is not for updating password', 400)); // 400 bad request
+  }
+  // console.log(`req.file from update${req.files}
+  // ${req.files.image}`);
+  // console.log(req.files);
+  req.params.id = req.user.id;
+  Model = req.user.constructor;
+  console.log(Model);
+  //)FilterOut unwanted Fields
+  // const filteredBody = filterObj(
+  //   req.body,
+  //   //allowedFilelds
+  //   'image',
+  //   'name',
+  //   // 'imageCover',
+  //   'description',
+  //   'phoneNumber',
+  //   'fName',
+  //   'lName'
+  // );
+
+  // filteredBody.image = req.body.image;
+  // filteredBody.imageCover = req.body.imageCover;
+  // console.log(filteredBody);
+  const updatedUser = await Model.findByIdAndUpdate(req.user.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
   res.status(200).json({
     status: 'success',
     user: updatedUser,
