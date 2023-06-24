@@ -91,6 +91,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const url = `${req.protocol}://${req.get('host')}/me`;
       new Email(newUser, url).sendWelcome();
       createSendToken(newUser, req, 201, res);
+      console.log('created');
 
       break;
     }
@@ -109,6 +110,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       new Email(newUser, url).sendWelcome();
 
       createSendToken(newUser, req, 201, res);
+      console.log('created');
       break;
     }
   }
@@ -347,13 +349,12 @@ exports.updateCustomerProfile = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;
   Model = req.user.constructor;
   console.log(Model);
-  //)FilterOut unwanted Fields
+  // // )FilterOut unwanted Fields
   // const filteredBody = filterObj(
   //   req.body,
   //   //allowedFilelds
   //   'image',
   //   'name',
-  //   // 'imageCover',
   //   'description',
   //   'phoneNumber',
   //   'fName',
@@ -367,6 +368,7 @@ exports.updateCustomerProfile = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
+
   res.status(200).json({
     status: 'success',
     user: updatedUser,
@@ -382,23 +384,23 @@ exports.updateMechanicProfile = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;
   Model = req.user.constructor;
   console.log(Model);
-  //)FilterOut unwanted Fields
-  // const filteredBody = filterObj(
-  //   req.body,
-  //   //allowedFilelds
-  //   'image',
-  //   'name',
-  //   // 'imageCover',
-  //   'description',
-  //   'phoneNumber',
-  //   'fName',
-  //   'lName'
-  // );
+  // )FilterOut unwanted Fields
+  const filteredBody = filterObj(
+    req.body,
+    //allowedFilelds
+    'image',
+    'name',
+    // 'imageCover',
+    'description',
+    'phoneNumber',
+    'fName',
+    'lName'
+  );
 
-  // filteredBody.image = req.body.image;
-  // filteredBody.imageCover = req.body.imageCover;
-  // console.log(filteredBody);
-  const updatedUser = await Model.findByIdAndUpdate(req.user.id, req.body, {
+  filteredBody.image = req.body.image;
+  filteredBody.imageCover = req.body.imageCover;
+  console.log(filteredBody);
+  const updatedUser = await Model.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
   });
@@ -407,6 +409,7 @@ exports.updateMechanicProfile = catchAsync(async (req, res, next) => {
     user: updatedUser,
   });
 });
+
 exports.updateWorkshopProfile = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('this route is not for updating password', 400)); // 400 bad request
@@ -417,23 +420,23 @@ exports.updateWorkshopProfile = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;
   Model = req.user.constructor;
   console.log(Model);
-  //)FilterOut unwanted Fields
-  // const filteredBody = filterObj(
-  //   req.body,
-  //   //allowedFilelds
-  //   'image',
-  //   'name',
-  //   // 'imageCover',
-  //   'description',
-  //   'phoneNumber',
-  //   'fName',
-  //   'lName'
-  // );
+  // )FilterOut unwanted Fields
+  const filteredBody = filterObj(
+    req.body,
+    //allowedFilelds
+    'image',
+    'name',
+    'imageCover',
+    'description',
+    'phoneNumber',
+    'fName',
+    'lName'
+  );
 
-  // filteredBody.image = req.body.image;
-  // filteredBody.imageCover = req.body.imageCover;
-  // console.log(filteredBody);
-  const updatedUser = await Model.findByIdAndUpdate(req.user.id, req.body, {
+  filteredBody.image = req.body.image;
+  filteredBody.imageCover = req.body.imageCover;
+  console.log(filteredBody);
+  const updatedUser = await Model.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
   });

@@ -11,7 +11,6 @@ exports.uploadeProfileImage = async (req, res, next) => {
   // console.log(req.files,im);
   if (!req.files) {
     console.log('no images');
-
     req.body.image = undefined;
     return next();
     // console.log('noimages');
@@ -90,5 +89,34 @@ exports.updateImageCover = async (req, res, next) => {
   console.log(`result:`);
   console.log(req.body.imageCover);
   // res.status(200).json(result);
+  next();
+};
+
+exports.updateMechanicProfileImage = async (req, res, next) => {
+  // console.log(req.files,im);
+  console.log(`---------`);
+
+  if (!req.files) {
+    console.log('no images');
+    // console.log(req.files);
+    // req.body.image = undefined;
+    console.log(req.user);
+    return next();
+    console.log('noimages');
+  }
+  console.log(req.files.image);
+  const ext = req.files.image.mimetype.split('/')[1];
+  const imageName = `user--${Date.now()}.${ext}`;
+  console.log(imageName);
+  const result = await cloudinary.uploader.upload(
+    req.files.image.tempFilePath,
+    {
+      resource_type: 'auto',
+      public_id: `${imageName}`,
+    }
+  );
+  console.log(`image uploading result: 
+  ${result}`);
+  req.body.image = result.secure_url;
   next();
 };

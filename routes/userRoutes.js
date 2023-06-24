@@ -29,6 +29,13 @@ router.post(
   // images.uploadeProfileImage,
   authController.signUp
 );
+
+router.post(
+  '/signup_',
+  // imagesCloud.uploadeProfileImage,
+  // images.uploadeProfileImage,
+  authController.signUp
+);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.use(authController.protect); //will protect all routes coming after it
@@ -36,12 +43,7 @@ router.use(authController.protect); //will protect all routes coming after it
 router.patch('/updateMyPassword', authController.updatePassword);
 
 router.get('/me', authController.getMe);
-router.patch(
-  '/updateWorkshopProfile',
-  imagesCloud.updateImageCover,
-  imagesCloud.updateProfileImage,
-  authController.updateWorkshopProfile
-);
+
 // router.post('/uploadImage', images.uploadeProfileImage);
 // router.post('/uploadImages', imagesCloud.uploadeImageCover);
 module.exports = router;

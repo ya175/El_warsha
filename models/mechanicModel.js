@@ -61,9 +61,9 @@ const mechanicSchema = new mongoose.Schema(
       type: String,
       // default: 'default.jpg',
     },
-    imageCover: {
-      type: String,
-    },
+    // imageCover: {
+    //   type: String,
+    // },
 
     passwordResetToken: String,
     passwordResetExpires: Date,
