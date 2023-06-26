@@ -137,6 +137,36 @@ exports.logIn = catchAsync(async (req, res, next) => {
   createSendToken(user, req, 200, res);
 });
 
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // 2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // THERE IS A LOGGED IN USER
+      res.locals.user = currentUser;
+      return next();
+    } catch (err) {
+      return next();
+    }
+  }
+  next();
+};
+
 module.exports.forgotPassword = catchAsync(async (req, res, next) => {
   //1)find User
   const user =
@@ -154,9 +184,8 @@ module.exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   //3)send  reset token the user  via email
   try {
-    const resetUrl = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/users/resetPassword/${resetToken}`;
+    // const resetUrl = `${req.protocol}://${req.get(host
+    const resetUrl = `${req.protocol}://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
     console.log(resetUrl);
     console.log(resetToken);
     await new Email(user, resetUrl).sendPasswordReset();
@@ -214,7 +243,7 @@ module.exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   //3)log in user
-  createSendToken(user, 200, res);
+  createSendToken(user, req, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -236,7 +265,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
   //4)log user  in
-  createSendToken(user, 200, res);
+  createSendToken(user, req, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -277,6 +306,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   req.user = currentUser;
+  res.locals.user = currentUser;
 
   next();
 });
