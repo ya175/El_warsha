@@ -20,4 +20,8 @@ router.patch(
   imagesCloud.updateProfileImage,
   authController.updateWorkshopProfile
 );
+
+router
+  .route('/addToMyTeam/:mechanicId')
+  .post(authController.restrictTo('Workshop'), workshopController.addToMyTeam);
 module.exports = router;

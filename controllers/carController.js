@@ -10,7 +10,9 @@ exports.setUserIds = (req, res, next) => {
 
   next();
 };
+
 exports.addMyCar = factory.createOne(Car);
+exports.updateMyCar = factory.updateOne(Car);
 
 exports.follwAgent = async (req, res, next) => {
   if (await Car.find({ id: req.user.id, followAgency: true })) {
@@ -42,7 +44,5 @@ exports.addAgentData = catchAsync(async (req, res, next) => {
     },
   });
 });
-
-exports.updateMyCar = factory.updateOne(Car);
 
 //get my car

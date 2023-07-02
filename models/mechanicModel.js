@@ -17,15 +17,16 @@ const mechanicSchema = new mongoose.Schema(
     rolle: {
       type: String,
     },
-    workshop: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Workshop',
-    },
+    // workshop: {
+    //   type: mongoose.Schema.ObjectId,
+    //   ref: 'Workshop',
+    // },
     Specialization: {
       type: String,
     },
     alone: {
       type: Boolean,
+      default: true,
     },
     email: {
       type: String,
@@ -78,6 +79,12 @@ const mechanicSchema = new mongoose.Schema(
 mechanicSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'reviewTarget',
+  localField: '_id',
+});
+
+mechanicSchema.virtual('orders', {
+  ref: 'Order',
+  foreignField: 'orderTarget',
   localField: '_id',
 });
 mechanicSchema.pre('save', async function (next) {

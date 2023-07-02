@@ -39,7 +39,7 @@ const createSendToken = (user, req, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    // secure: true,
+    secure: true,
     httpOnly: true,
     // secure:
     // req.secure ||
@@ -147,7 +147,10 @@ exports.isLoggedIn = async (req, res, next) => {
       );
 
       // 2) Check if user still exists
-      const currentUser = await User.findById(decoded.id);
+      const currentUser =
+        (await Customer.findById(decoded.id)) ||
+        (await Workshop.findById(decoded.id)) ||
+        (await Mechanic.findById(decoded.id));
       if (!currentUser) {
         return next();
       }
@@ -159,6 +162,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
+      console.log('logedin');
       return next();
     } catch (err) {
       return next();
@@ -353,11 +357,18 @@ exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
   let query = Model.findById(req.params.id);
   console.log(req.user.rolle);
   if (req.user.rolle == 'Customer') {
-    console.log(true);
-    popOptoins = { path: 'cars' };
-    console.log(popOptoins);
-    if (popOptoins) query = query.populate(popOptoins);
+    query = query.populate('cars');
+    // popOptoins = { path: 'cars' };
+  } else if (req.user.rolle == 'Workshop') {
+    query = query.populate('reviews').populate('team').populate('orders');
+    // popOptoins = { path: 'reviews' };
+  } else if (req.user.rolle == 'Mechanic') {
+    query = query.populate('reviews').populate('team').populate('orders');
+
+    // popOptoins = { path: 'reviews' };
   }
+  // if (popOptoins) query = query.populate(popOptoins).populate('team');
+
   const doc = await query;
   if (!doc) {
     return next(new AppError('no document found with that id', 404));

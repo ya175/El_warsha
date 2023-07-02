@@ -43,7 +43,9 @@ router.use(authController.protect); //will protect all routes coming after it
 router.patch('/updateMyPassword', authController.updatePassword);
 
 router.get('/me', authController.getMe);
+router.route('/isLoggedIn').get(authController.isLoggedIn);
 
+// router.use())
 // router.post('/uploadImage', images.uploadeProfileImage);
 // router.post('/uploadImages', imagesCloud.uploadeImageCover);
 module.exports = router;

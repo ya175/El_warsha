@@ -20,7 +20,15 @@ exports.getAll = (Model) =>
 exports.getOne = (Model, popOptoins) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
+    // const role = Model[0];
+    // console.log(role);
     if (popOptoins) query = query.populate(popOptoins);
+    // if (popOptoins == 'Work') {
+    //   console.log(true);
+    query = query.populate('reviews').populate('team').populate('orders');
+    // }
+
+    // console.log('NO');
     const doc = await query;
     if (!doc) {
       return next(new AppError('no document found with that id', 404));

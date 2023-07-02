@@ -30,12 +30,12 @@ const workshopSchema = new mongoose.Schema(
     imageCover: {
       type: String,
     },
-    team: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Mechanic',
-      },
-    ],
+    // team: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'Mechanic',
+    //   },
+    // ],
     phoneNumber: {
       type: String,
     },
@@ -78,6 +78,27 @@ workshopSchema.virtual('reviews', {
   foreignField: 'reviewTarget',
   localField: '_id',
 });
+
+workshopSchema.virtual('orders', {
+  ref: 'Order',
+  foreignField: 'orderTarget',
+  localField: '_id',
+});
+
+workshopSchema.virtual('team', {
+  ref: 'Team',
+  foreignField: 'workshop',
+  localField: '_id',
+});
+
+// workshopSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'team',
+//     select: 'name image specialization',
+//   });
+//   next();
+// });
+
 workshopSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
