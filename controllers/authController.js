@@ -39,7 +39,7 @@ const createSendToken = (user, req, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    secure: true,
+    // secure: true,
     httpOnly: true,
     // secure:
     // req.secure ||
@@ -171,6 +171,52 @@ exports.isLoggedIn = async (req, res, next) => {
   next();
 };
 
+exports.protect = catchAsync(async (req, res, next) => {
+  //1) getting token && check if it is there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  } else if (req.body.token) {
+    token = req.body.token;
+    console.log(token);
+  }
+
+  if (!token) {
+    return next(
+      new AppError('you are not loged in , please log in to get access', 401)
+    );
+  }
+  //2)verification token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log(`user decoded : ${decoded}`);
+  //3)check if user still exists
+  const currentUser =
+    (await Customer.findById(decoded.id)) ||
+    (await Workshop.findById(decoded.id)) ||
+    (await Mechanic.findById(decoded.id));
+
+  if (!currentUser) {
+    return next(
+      new AppError('the user of this token does not longer exist', 401)
+    );
+  }
+  //4) check ifuser changed password after th JWT
+
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError('this user recently changed password ,please try again', 401)
+    );
+  }
+  req.user = currentUser;
+  res.locals.user = currentUser;
+
+  next();
+});
 module.exports.forgotPassword = catchAsync(async (req, res, next) => {
   //1)find User
   const user =
@@ -272,49 +318,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   createSendToken(user, req, 200, res);
 });
 
-exports.protect = catchAsync(async (req, res, next) => {
-  //1) getting token && check if it is there
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
-  }
-  if (!token) {
-    return next(
-      new AppError('you are not loged in , please log in to get access', 401)
-    );
-  }
-  //2)verification token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(`user decoded : ${decoded}`);
-  //3)check if user still exists
-  const currentUser =
-    (await Customer.findById(decoded.id)) ||
-    (await Workshop.findById(decoded.id)) ||
-    (await Mechanic.findById(decoded.id));
-
-  if (!currentUser) {
-    return next(
-      new AppError('the user of this token does not longer exist', 401)
-    );
-  }
-  //4) check ifuser changed password after th JWT
-
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError('this user recently changed password ,please try again', 401)
-    );
-  }
-  req.user = currentUser;
-  res.locals.user = currentUser;
-
-  next();
-});
-
 exports.restrictTo = (...rolles) => {
   return (req, res, next) => {
     if (!rolles.includes(req.user.rolle)) {
@@ -364,7 +367,6 @@ exports.getMe = catchAsync(async (req, res, next, popOptoins) => {
     // popOptoins = { path: 'reviews' };
   } else if (req.user.rolle == 'Mechanic') {
     query = query.populate('reviews').populate('team').populate('orders');
-
     // popOptoins = { path: 'reviews' };
   }
   // if (popOptoins) query = query.populate(popOptoins).populate('team');
