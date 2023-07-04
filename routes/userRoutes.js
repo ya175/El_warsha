@@ -26,7 +26,6 @@ router.post('/login', authController.logIn);
 router.post(
   '/signup',
   imagesCloud.uploadeProfileImage,
-  // images.uploadeProfileImage,
   authController.signUp
 );
 

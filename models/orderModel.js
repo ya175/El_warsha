@@ -38,16 +38,6 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-// reviewSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'reviewTarget',
-//     select: 'name',
-//   }).populate({
-//     path: 'customer',
-//     select: 'fName image',
-//   });
-//   next();
-// });
 
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;

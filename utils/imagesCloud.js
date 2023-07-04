@@ -52,13 +52,13 @@ exports.updateProfileImage = async (req, res, next) => {
   console.log(imageName);
   const result = await cloudinary.uploader.upload(
     req.files.image.tempFilePath,
+
     {
       resource_type: 'auto',
       public_id: `${imageName}`,
     }
   );
-  console.log(`image uploading result: 
-  ${result}`);
+  console.log(`image uploading result: ${result}`);
   req.body.image = result.secure_url;
   next();
 };

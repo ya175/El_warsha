@@ -39,7 +39,7 @@ const createSendToken = (user, req, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    // secure: true,
+    secure: true,
     httpOnly: true,
     // secure:
     // req.secure ||
@@ -91,7 +91,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const url = `${req.protocol}://${req.get('host')}/me`;
       new Email(newUser, url).sendWelcome();
       createSendToken(newUser, req, 201, res);
-      console.log('created');
+      console.log(req);
 
       break;
     }
@@ -100,7 +100,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       const url = `${req.protocol}://${req.get('host')}/me`;
       new Email(newUser, url).sendWelcome();
       createSendToken(newUser, req, 201, res);
-      console.log('created');
+      console.log(req);
       break;
     }
     case 'mechanic': {
@@ -110,7 +110,7 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       new Email(newUser, url).sendWelcome();
 
       createSendToken(newUser, req, 201, res);
-      console.log('created');
+      console.log(req);
       break;
     }
   }

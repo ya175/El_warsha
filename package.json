@@ -13,7 +13,7 @@
   "dependencies": {
     "-": "^0.0.1",
     "bcrypt": "^5.1.0",
-    "cloudinary": "^1.37.2",
+    "cloudinary": "^1.37.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -28,6 +28,7 @@
     "mongoose": "^7.0.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "nodejs-nodemailer-outlook": "^1.2.4",
     "nodemailer": "^6.9.1",
     "pug": "^3.0.2",
