@@ -40,7 +40,7 @@ const createSendToken = (user, req, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     secure: true,
-    httpOnly: true,
+    // httpOnly: true,
     // secure:
     // req.secure ||
     // req.headers([Symbol(kHeaders)])['x-forwarded-proto'] === 'https',
@@ -179,11 +179,14 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+    console.log(`token from AUTH  is : ${token}`);
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
+    console.log(`token from cookies  is : ${token}`);
   } else if (req.body.token) {
     token = req.body.token;
-    console.log(token);
+    console.log(`token from body  is : ${token}`);
+    // console.log(token);
   }
 
   if (!token) {
