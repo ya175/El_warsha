@@ -11,7 +11,7 @@ exports.uploadeProfileImage = async (req, res, next) => {
   // console.log(req.files,im);
   if (!req.files) {
     console.log('no images');
-    req.body.image = undefined;
+    // req.body.image = undefined;
     return next();
     // console.log('noimages');
   }
