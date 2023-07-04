@@ -18,7 +18,8 @@ const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 
 const app = express();
-app.use(cors());
+
+app.use(cors({ credentials: true }));
 app.options('*', cors());
 
 if (process.env.NODE_ENV === 'development') {
