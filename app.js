@@ -31,7 +31,7 @@ app.options('*', cors());
 // app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
-  // res.setHead/er('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHead / er('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE'
