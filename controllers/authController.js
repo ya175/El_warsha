@@ -136,9 +136,9 @@ exports.logIn = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctMyPassword(password, user.password))) {
     return next(new AppError('invalid email or password', 401));
   }
-  //console.log(user);
   //3) send token
   createSendToken(user, req, 200, res);
+  console.log(`user logged in :${user}`);
 });
 
 exports.isLoggedIn = async (req, res, next) => {
