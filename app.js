@@ -20,7 +20,7 @@ const carRouter = require('./routes/carRoutes');
 const app = express();
 // app.enable('trust proxy');
 
-app.use(cors({ credentials: true }));
+app.use(cors());
 app.options('*', cors());
 
 // var corsOptions = {
@@ -30,10 +30,10 @@ app.options('*', cors());
 
 // app.use(cors(corsOptions));
 
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// });
 // if (process.env.NODE_ENV === 'development') {
 //   app.use(morgan('dev'));
 // }
