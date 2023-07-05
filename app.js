@@ -18,6 +18,8 @@ const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 
 const app = express();
+app.use(cors({ credentials: true }));
+app.options('*', cors());
 
 // var corsOptions = {
 //   origin: '*',
@@ -26,23 +28,17 @@ const app = express();
 
 // app.use(cors(corsOptions));
 
-// app.use(function (req, res, next) {
-//   res.setHeader('Access-Control-Allow-Origin', '*'),
-//     res.setHeader(
-//       'Access-Control-Allow-Methods',
-//       'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-//     );
-//   res.setHeader(
-//     'Access-Control-Allow-Headers',
-//     'X-Requested-With,content-type'
-//   );
-//   res.setHeader('Access-Control-Allow-Credentials', true);
-//   next();
-// }); // app.enable('trust proxy');
+app.use(function (req, res, next) {
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With,content-type'
+  );
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+// app.enable('trust proxy');
 
-app.use(cors({ credentials: true }));
-app.options('*', cors());
-
+``;
 // var corsOptions = {
 //   // origin: 'http://localhost:3000',
 //   credentials: true,
