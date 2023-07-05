@@ -172,6 +172,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   //1) getting token && check if it is there
+  console.log(req)
   let token;
   if (
     req.headers.authorization &&

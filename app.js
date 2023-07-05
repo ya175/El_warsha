@@ -18,18 +18,20 @@ const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 
 const app = express();
+app.enable('trust proxy');
 
-// app.use(cors({ credentials: true }));
-// app.options('*', cors());
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  credentials: true,
-};
+app.use(cors({ credentials: true }));
+app.options('*', cors());
 
-app.use(cors(corsOptions));
+// var corsOptions = {
+//   // origin: 'http://localhost:3000',
+//   credentials: true,
+// };
+
+// app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // res.setHead/er('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE'
@@ -41,15 +43,15 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  // console.log(req);
-  // console.log(`req.cookies: ${req}`);
-  next();
-});
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(morgan('dev'));
+// }
+// app.use((req, res, next) => {
+//   req.requestTime = new Date().toISOString();
+//   // console.log(req);
+//   // console.log(`req.cookies: ${req}`);
+//   next();
+// });
 
 app.use(fileupload({ useTempFiles: true }));
 //limit requests from same api
