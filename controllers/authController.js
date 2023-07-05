@@ -40,12 +40,12 @@ const createSendToken = (user, req, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     // sameSite: 'none',
-    secure: true,
+    // secure: true,
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    path: '/',
     // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-    // path:'/'
-    // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-    //  request.headers[“X-Forwarded-For”].
+    // //  request.headers[“X-Forwarded-For”].
   };
 
   // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
@@ -58,8 +58,8 @@ const createSendToken = (user, req, statusCode, res) => {
   // console.log(req[Symbol(kHeaders)]);
 
   res.cookie('jwt', token, cookieOptions);
-  // if (res.cookie('jwt', token, cookieOptions))
-  //   console.log('cookie set successfuly');
+  if (res.cookie('jwt', token, cookieOptions))
+    console.log('cookie set successfuly');
   // user.password = undefined;
 
   res.status(statusCode).json({
