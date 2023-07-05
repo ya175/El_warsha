@@ -19,29 +19,29 @@ const carRouter = require('./routes/carRoutes');
 
 const app = express();
 
-var corsOptions = {
-  origin: '*',
-  credentials: true,
-};
+// var corsOptions = {
+//   origin: '*',
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*'),
-    res.setHeader(
-      'Access-Control-Allow-Methods',
-      'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-    );
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-Requested-With,content-type'
-  );
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-}); // app.enable('trust proxy');
+// app.use(function (req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', '*'),
+//     res.setHeader(
+//       'Access-Control-Allow-Methods',
+//       'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+//     );
+//   res.setHeader(
+//     'Access-Control-Allow-Headers',
+//     'X-Requested-With,content-type'
+//   );
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// }); // app.enable('trust proxy');
 
-// app.use(cors());
-// app.options('*', cors());
+app.use(cors({ credentials: true }));
+app.options('*', cors());
 
 // var corsOptions = {
 //   // origin: 'http://localhost:3000',
