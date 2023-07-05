@@ -90,6 +90,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       new Email(newUser, url).sendWelcome();
       createSendToken(newUser, req, 201, res);
       console.log(req);
+      console.log(`response is ${res}`);
+      console.log(`created`);
 
       break;
     }
@@ -99,6 +101,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
       new Email(newUser, url).sendWelcome();
       createSendToken(newUser, req, 201, res);
       console.log(req);
+      console.log(`response is ${res}`);
+      console.log(`created`);
       break;
     }
     case 'mechanic': {
@@ -109,6 +113,8 @@ module.exports.signUp = catchAsync(async (req, res, next) => {
 
       createSendToken(newUser, req, 201, res);
       console.log(req);
+      console.log(`response is ${res}`);
+      console.log(`created`);
       break;
     }
   }

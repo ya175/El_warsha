@@ -20,14 +20,14 @@ const carRouter = require('./routes/carRoutes');
 const app = express();
 
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  // origin: 'http://localhost:3000',
   credentials: true,
 };
 
 app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE'
