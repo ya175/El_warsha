@@ -18,7 +18,8 @@ const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 
 const app = express();
-app.use(cors({ credentials: true, origin: true }));
+// app.use(cors({ credentials: true, origin: true }));
+app.use(cors());
 app.options('*', cors());
 
 // var corsOptions = {
@@ -36,18 +37,18 @@ app.options('*', cors());
 //   res.Header('Access-Control-Allow-Credentials', true);
 //   next();
 // });
-app.use(function (req, res, next) {
-  res.header('Content-Type', 'application/json;charset=UTF-8');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-}); // app.enable('trust proxy');
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-});
+// app.use(function (req, res, next) {
+//   res.header('Content-Type', 'application/json;charset=UTF-8');
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   );
+//   next();
+// }); // app.enable('trust proxy');
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+// });
 // ``;
 // var corsOptions = {
 //   // origin: 'http://localhost:3000',
