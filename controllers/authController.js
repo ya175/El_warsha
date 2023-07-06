@@ -44,6 +44,8 @@ const createSendToken = (user, req, statusCode, res) => {
     httpOnly: true,
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     path: '/',
+    sameSite: 'Strict' // works for local development
+  }
     // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     // //  request.headers[“X-Forwarded-For”].
   };
