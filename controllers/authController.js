@@ -44,11 +44,10 @@ const createSendToken = (user, req, statusCode, res) => {
     httpOnly: true,
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     path: '/',
-    sameSite: 'Strict' // works for local development
-  }
-    // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-    // //  request.headers[“X-Forwarded-For”].
+    sameSite: 'Strict', // works for local development
   };
+  // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+  // //  request.headers[“X-Forwarded-For”].
 
   // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   // if (process.env.NODE_ENV === 'production') {
@@ -58,7 +57,7 @@ const createSendToken = (user, req, statusCode, res) => {
   // }
   // console.log(req);
   // console.log(req[Symbol(kHeaders)]);
-
+  // if(process.env.)
   res.cookie('jwt', token, cookieOptions);
   if (res.cookie('jwt', token, cookieOptions))
     console.log('cookie set successfuly');
@@ -72,6 +71,7 @@ const createSendToken = (user, req, statusCode, res) => {
     },
   });
 };
+
 module.exports.signUp = catchAsync(async (req, res, next) => {
   // console.log(req.body);
   let rolle = req.body.rolle;
