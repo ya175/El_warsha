@@ -77,7 +77,7 @@ const limiter = rateLimit({
   message: 'too many requests from this api,please try again in 1 hour',
 });
 app.use('/api', limiter);
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json());
 // app.use(express.json());
 app.use(cookieParser());
 
