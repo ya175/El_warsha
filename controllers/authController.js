@@ -39,29 +39,11 @@ const createSendToken = (user, req, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    // sameSite: 'none',
-    // secure: true,
     httpOnly: true,
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-    path: '/',
-    sameSite: 'Strict', // works for local development
   };
-  // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-  // //  request.headers[“X-Forwarded-For”].
-
-  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  // if (process.env.NODE_ENV === 'production') {
-  //   // cookieOptions.secure =
-  //   //   req.secure || req.headers['x-forwarded-proto') === 'https';
-  //   cookieOptions.secure = true;
-  // }
-  // console.log(req);
-  // console.log(req[Symbol(kHeaders)]);
-  // if(process.env.)
   res.cookie('jwt', token, cookieOptions);
-  if (res.cookie('jwt', token, cookieOptions))
-    console.log('cookie set successfuly');
-  // user.password = undefined;
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
@@ -73,18 +55,17 @@ const createSendToken = (user, req, statusCode, res) => {
 };
 
 module.exports.signUp = catchAsync(async (req, res, next) => {
-  // console.log(req.body);
   let rolle = req.body.rolle;
   userData = {
     fName: req.body.fName,
     lName: req.body.lName,
     email: req.body.email,
     password: req.body.password,
+    name: req.body.name,
     passwordConfirm: req.body.passwordConfirm,
     rolle: req.body.rolle,
     image: req.body.image,
   };
-  console.log(userData);
   switch (rolle) {
     case 'workshop': {
       const newUser = await Workshop.create(userData);
@@ -140,7 +121,6 @@ exports.logIn = catchAsync(async (req, res, next) => {
   }
   //3) send token
   createSendToken(user, req, 200, res);
-  console.log(`user logged in :${user}`);
 });
 
 exports.isLoggedIn = async (req, res, next) => {
@@ -179,25 +159,17 @@ exports.isLoggedIn = async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   //1) getting token && check if it is there
-  console.log(req);
   let token;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
-    console.log(`token from AUTH  is : ${token}`);
-  }
-  // console.log(req.cookies);
-  else if (req.cookies.jwt) {
+  } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
-    console.log(`token from cookies  is : ${token}`);
   } else if (req.body.token) {
     token = req.body.token;
-    console.log(`token from body  is : ${token}`);
-    // console.log(token);
   }
-
   if (!token) {
     return next(
       new AppError('you are not loged in , please log in to get access', 401)
@@ -205,7 +177,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   //2)verification token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(`user decoded : ${decoded}`);
   //3)check if user still exists
   const currentUser =
     (await Customer.findById(decoded.id)) ||
@@ -229,6 +200,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   next();
 });
+
 module.exports.forgotPassword = catchAsync(async (req, res, next) => {
   //1)find User
   const user =
@@ -246,10 +218,7 @@ module.exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   //3)send  reset token the user  via email
   try {
-    // const resetUrl = `${req.protocol}://${req.get(host
     const resetUrl = `${req.protocol}://localhost:3000/resetPassword/${resetToken}`;
-    console.log(resetUrl);
-    console.log(resetToken);
     await new Email(user, resetUrl).sendPasswordReset();
     res.status(200).json({
       status: 'success',
@@ -274,9 +243,6 @@ module.exports.resetPassword = catchAsync(async (req, res, next) => {
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
-
-  console.log(req.params.token);
-  console.log(hashedToken);
   const user =
     (await Customer.findOne({
       passwordResetToken: hashedToken,
@@ -290,8 +256,6 @@ module.exports.resetPassword = catchAsync(async (req, res, next) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: Date.now() },
     }));
-
-  // console.log(user);
   if (!user) {
     return next(new AppError('invalid token or it has been expired', 400));
   }
@@ -303,7 +267,6 @@ module.exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordChangedAt = Date.now();
 
   await user.save();
-
   //3)log in user
   createSendToken(user, req, 200, res);
 });

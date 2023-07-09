@@ -77,16 +77,13 @@ app.use(fileupload({ useTempFiles: true }));
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: 'too many requests from this api,please try again in 1 hour',
+  message: 'too many requests from this IP ,please try again in 1 hour',
 });
-app.use('/api', limiter);
-app.use(express.json());
-// app.use(express.json());
-app.use(cookieParser());
 
-// {    "email":{"$gt":""},
-//     "password":"pass1234455"
-// }
+app.use('/api', limiter);
+
+app.use(express.json());
+app.use(cookieParser());
 
 //data sanitization against no sql query injection
 app.use(mongoSanitize());

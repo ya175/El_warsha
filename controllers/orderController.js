@@ -1,16 +1,21 @@
+const Mechanic = require('../models/mechanicModel');
+const Workshop = require('../models/workshopModel');
 const Order = require('./../models/orderModel');
 const catchAsync = require('./../utils/catchAsync');
 
-exports.setAboutUserIds = (req, res, next) => {
+exports.setAboutUserIds = async (req, res, next) => {
   //set workshop or mechanic id
-  if (!req.body.orderTarget)
-    req.body.orderTarget = req.params.workshopId || req.params.mechanicId;
+  if (!req.body.orderTarget) req.body.orderTarget = req.params.id;
   //set customer id
   if (!req.body.customer) req.body.customer = req.user.id;
 
   if (!req.body.orderTo) {
-    if (req.params.mechanicId) req.body.reviewAbout = 'Mechanic';
-    else req.body.reviewAbout = 'Workshop';
+    const ordertoUser =
+      (await Workshop.findById(req.params.id)) ||
+      (await Mechanic.findById(req.params.id));
+
+    req.body.orderTo = ordertoUser.rolle;
+    console.log(req.body.orderTo);
   }
   next();
 };

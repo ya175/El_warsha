@@ -65,12 +65,9 @@ customerSchema.virtual('cars', {
 });
 
 customerSchema.pre('save', async function (next) {
-  // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
-
   // Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
-
   // Delete passwordConfirm field
   this.passwordConfirm = undefined;
   next();
@@ -97,14 +94,12 @@ customerSchema.methods.correctMyPassword = async function (
 customerSchema.methods.createPasswordResetToken = function () {
   // 1)create a new password reset token
   const resetToken = crypto.randomBytes(32).toString('hex');
-
   //2)encrypt the password reset token
   this.passwordResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
   this.passwordResetExpires = Date.now() + 100 * 60 * 1000; //
-
   return resetToken;
 };
 

@@ -15,7 +15,7 @@ router.patch(
 );
 
 router
-  .route('/order')
+  .route('/:id/order')
   .post(
     authController.restrictTo('Customer'),
     orderController.setAboutUserIds,
