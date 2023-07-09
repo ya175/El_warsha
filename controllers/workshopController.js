@@ -7,7 +7,38 @@ const Review = require('../models/reviewModel');
 
 exports.getAllWorkshops = factory.getAll(Workshop);
 
-exports.getWorkshopById = factory.getOne(Workshop);
+// exports.getWorkshopById = factory.getOne(Workshop);
+
+exports.getWorkshopById = catchAsync(async (req, res, next) => {
+  let query = Workshop.findById(req.params.id);
+  // if (popOptoins) query = query.populate(popOptoins);
+  query = query.populate('reviews');
+  const doc = await query;
+  if (!doc) {
+    return next(new AppError('هذه الورشه غير موجودة', 404));
+  }
+  const averageRating = await Review.aggregate([
+    {
+      $match: {
+        reviewTarget: doc._id,
+      },
+    },
+    {
+      $group: {
+        _id: '$reviewTarget',
+        averageRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+  console.log(averageRating);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: doc,
+      averageRating,
+    },
+  });
+});
 
 exports.addToMyTeam = catchAsync(async (req, res, next) => {
   req.body.workshop = req.user._id;
@@ -17,6 +48,35 @@ exports.addToMyTeam = catchAsync(async (req, res, next) => {
     status: 'success',
     data: newTeam,
   });
+});
+
+exports.aggregateWorkshop = catchAsync(async (req, res, next) => {
+  Workshop.aggregate(
+    [
+      {
+        $lookup: {
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'workshopId',
+          as: 'reviews',
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          averageRating: { $avg: '$reviews.rating' },
+        },
+      },
+    ],
+    function (err, result) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      console.log(result);
+    }
+  );
 });
 
 // exports.addToMyTeam = catchAsync(async (req, res, next) => {

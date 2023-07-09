@@ -9,7 +9,10 @@ const router = express.Router();
 router.use('/:workshopId/reviews', reviewRouter); //wheereever you see '/:tourId/reviews' use reviewRouter instead
 
 router.route('/').get(workshopController.getAllWorkshops);
-router.route('/:id').get(workshopController.getWorkshopById);
+router.route('/:id').get(
+  // workshopController.aggregateWorkshop,
+  workshopController.getWorkshopById
+);
 
 router.route('/').get(workshopController.getAllWorkshops);
 

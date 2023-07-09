@@ -27,6 +27,9 @@ const workshopSchema = new mongoose.Schema(
       type: String,
       // default: 'default.jpg',
     },
+    averageRating: {
+      type: Number,
+    },
     imageCover: {
       type: String,
     },
