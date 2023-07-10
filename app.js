@@ -17,6 +17,11 @@ const reviewRouter = require('./routes/reviewRoutes');
 const userRouter = require('./routes/userRoutes');
 const carRouter = require('./routes/carRoutes');
 
+const productRoute = require('./routes/productRoutes');
+const cartRoute = require('./routes/cartRoutes');
+const orderProductRoute = require('./routes/orderProductRoutes');
+const stripeRoute = require('./routes/stripeRoutes');
+
 const app = express();
 // app.use(cors({ credentials: true, origin: true }));
 app.use(cors());
@@ -97,8 +102,15 @@ app.use('/api/v1/workshops', workshopRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/cars', carRouter);
+
+app.use('/api/products', productRoute);
+app.use('/api/carts', cartRoute);
+app.use('/api/orderProduct', orderProductRoute);
+app.use('/api/checkout', stripeRoute);
+
 app.all('*', (req, res, next) => {
   next(new appError(`can not find ${req.originalUrl}`, 404));
 });
+
 app.use(globalErrorHandler);
 module.exports = app;

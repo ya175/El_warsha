@@ -1,17 +1,18 @@
-const Product = require('../models/product');
-const {
-  verifyToken,
-  verifyTokenAndAuthorization,
-  verifyTokenAndAdmin,
-} = require('./verifyToken');
+const express = require('express');
+
+const Product = require('../models/productModel');
+const authController = require('./../controllers/authController');
+
 const router = require('express').Router();
+
+const imagesCloud = require('./../utils/imagesCloud');
 
 //create
 
 router.use(authController.protect);
 // router.use(authController.restrictTo('Customer'));
 
-router.post('/', async (req, res) => {
+router.post('/', imagesCloud.uploadeProductImage, async (req, res, next) => {
   const newProduct = new Product(req.body);
   try {
     const savedProduct = await newProduct.save();

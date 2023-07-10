@@ -1,9 +1,6 @@
-const Order = require('../models/orderProduct');
-const {
-  verifyToken,
-  verifyTokenAndAuthorization,
-  verifyTokenAndAdmin,
-} = require('./verifyToken');
+const OrderProduct = require('./../models/orderProductModel');
+const authController = require('./../controllers/authController');
+
 const router = require('express').Router();
 
 //create

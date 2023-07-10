@@ -1,4 +1,6 @@
 const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
 
 const catchAsync = require('./catchAsync');
 cloudinary.config({
@@ -118,5 +120,27 @@ exports.updateMechanicProfileImage = async (req, res, next) => {
   console.log(`image uploading result: 
   ${result}`);
   req.body.image = result.secure_url;
+  next();
+};
+exports.uploadeProductImage = async (req, res, next) => {
+  // console.log(req.files,im);
+  if (!req.files) {
+    console.log('no images');
+    req.body.img = undefined;
+    return next();
+    // console.log('noimages');
+  }
+  // console.log(`files: ${req.files}`);
+  // console.log(`files:${req.files}`);
+  console.log(req);
+  const ext = req.files.img.mimetype.split('/')[1];
+  const imageName = `user--${Date.now()}.${ext}`;
+  // console.log(imageName);
+  const result = await cloudinary.uploader.upload(req.files.img.tempFilePath, {
+    resource_type: 'auto',
+    public_id: `${imageName}`,
+  });
+  // console.log(result);
+  req.body.img = result.secure_url;
   next();
 };

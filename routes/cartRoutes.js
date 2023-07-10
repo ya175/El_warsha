@@ -1,5 +1,7 @@
-const Cart = require('../models/cart');
+const Cart = require('./../models/cartModel');
 // const { verifyToken, verifyTokenAndAdmin } = require('./verifyToken');
+const authController = require('./../controllers/authController');
+
 const router = require('express').Router();
 
 //create
@@ -55,7 +57,7 @@ router.get('/find/:userId', async (req, res) => {
 });
 
 //get all
-router.get('/', verifyTokenAndAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const carts = await Cart.find();
     res.status(200).json(carts);
