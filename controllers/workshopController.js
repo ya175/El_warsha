@@ -5,9 +5,56 @@ const factory = require('./handlerFactory');
 const authController = require('./authController');
 const Review = require('../models/reviewModel');
 
-exports.getAllWorkshops = factory.getAll(Workshop);
+// exports.getAllWorkshops = factory.getAll(Workshop);
 
 // exports.getWorkshopById = factory.getOne(Workshop);
+// const Workshop = require('./workshopModel');
+// const Review = require('./reviewModel');
+
+exports.getAllWorkshops = catchAsync(async (req, res, next) => {
+  try {
+    const workshops = await Workshop.find();
+    const workshopIds = workshops.map((workshop) => workshop._id);
+    const reviews = await Review.find({ reviewTarget: { $in: workshopIds } });
+    const averageRatings = await Review.aggregate([
+      {
+        $match: {
+          reviewTarget: { $in: workshopIds },
+        },
+      },
+      {
+        $group: {
+          _id: '$reviewTarget',
+          averageRating: { $avg: '$rating' },
+        },
+      },
+    ]);
+
+    const workshopsWithReviews = workshops.map((workshop) => {
+      const workshopReviews = reviews.filter(
+        (review) => review.reviewTarget.toString() === workshop._id.toString()
+      );
+      const averageRatingObject = averageRatings.find(
+        (averageRating) =>
+          averageRating._id.toString() === workshop._id.toString()
+      );
+      return {
+        ...workshop.toObject(),
+        reviews: workshopReviews,
+        averageRating: averageRatingObject
+          ? averageRatingObject.averageRating
+          : null,
+      };
+    });
+
+    res.status(200).json({ data: workshopsWithReviews });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// app.listen(3000, () => console.log('Server started on port 3000'));
 
 exports.getWorkshopById = catchAsync(async (req, res, next) => {
   let query = Workshop.findById(req.params.id);
@@ -35,7 +82,7 @@ exports.getWorkshopById = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       data: doc,
-      averageRating,
+      // averageRating,
     },
   });
 });
@@ -48,35 +95,6 @@ exports.addToMyTeam = catchAsync(async (req, res, next) => {
     status: 'success',
     data: newTeam,
   });
-});
-
-exports.aggregateWorkshop = catchAsync(async (req, res, next) => {
-  Workshop.aggregate(
-    [
-      {
-        $lookup: {
-          from: 'reviews',
-          localField: '_id',
-          foreignField: 'workshopId',
-          as: 'reviews',
-        },
-      },
-      {
-        $project: {
-          name: 1,
-          averageRating: { $avg: '$reviews.rating' },
-        },
-      },
-    ],
-    function (err, result) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-
-      console.log(result);
-    }
-  );
 });
 
 // exports.addToMyTeam = catchAsync(async (req, res, next) => {
