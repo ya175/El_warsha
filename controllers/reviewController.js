@@ -12,6 +12,7 @@ exports.setAboutUserIds = (req, res, next) => {
 
   next();
 };
+
 exports.createReview = factory.createOne(Review);
 exports.getAllReviews = factory.getAll(Review);
 exports.getReviewById = factory.getOne(Review);

@@ -60,7 +60,7 @@ exports.deleteOne = (Model) =>
     }
     res.status(204).json({
       status: 'success',
-      message: 'Tour has been deleted',
+      message: 'document has been deleted',
       data: null,
     });
   });

@@ -23,11 +23,7 @@ const Mechanic = require('./../models/mechanicModel');
 router.post('/forgotpassword', authController.forgotPassword);
 router.post('/login', authController.logIn);
 
-router.post(
-  '/signup',
-  imagesCloud.uploadeProfileImage,
-  authController.signUp
-);
+router.post('/signup', imagesCloud.uploadeProfileImage, authController.signUp);
 
 router.post(
   '/signup_',

@@ -159,21 +159,21 @@ workshopSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
-workshopSchema.statics.calculateAverageraing = async function (workshopId) {
-  this.averageRating = await Review.aggregate([
-    {
-      $match: {
-        workshopId: { $in: workshopIds },
-      },
-    },
-    {
-      $group: {
-        _id: '$workshopId',
-        averageRating: { $avg: '$rating' },
-      },
-    },
-  ]);
-};
+// workshopSchema.statics.calculateAverageraing = async function (workshopId) {
+//   this.averageRating = await Review.aggregate([
+//     {
+//       $match: {
+//         workshopId: { $in: workshopIds },
+//       },
+//     },
+//     {
+//       $group: {
+//         _id: '$workshopId',
+//         averageRating: { $avg: '$rating' },
+//       },
+//     },
+//   ]);
+// };
 
 const Workshop = mongoose.model('Workshop', workshopSchema);
 module.exports = Workshop;
